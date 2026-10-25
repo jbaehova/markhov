@@ -1,0 +1,645 @@
+/*
+ * Markhov theme. Selectors start with `body .cm-editor` so they win over
+ * CodeMirror's base theme, which is injected after this stylesheet.
+ */
+
+:root {
+  --mh-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", "Pretendard", "Segoe UI",
+    "Noto Sans KR", sans-serif;
+  --mh-mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+  --mh-size: 16px;
+  --mh-line: 1.65;
+  --mh-width: 720px;
+  --mh-pad: 56px;
+  --mh-radius: 8px;
+}
+
+body {
+  --mh-bg: #ffffff;
+  --mh-fg: #3a3a3c;
+  --mh-strong-fg: #1c1c1e;
+  --mh-muted: #8e8e93;
+  --mh-faint: #c7c7cc;
+  --mh-accent: #2f6fed;
+  --mh-code-bg: #f5f5f6;
+  --mh-border: #e6e6e9;
+  --mh-selection: rgba(47, 111, 237, 0.16);
+
+  --mh-tok-keyword: #c2366b;
+  --mh-tok-string: #3b8a4b;
+  --mh-tok-comment: #a1a1a6;
+  --mh-tok-number: #b5650d;
+  --mh-tok-function: #3a66c7;
+  --mh-tok-type: #8a4bbf;
+  --mh-tok-property: #2b7a99;
+  --mh-tok-meta: #b5650d;
+}
+
+/* markhov.appearance: "auto" follows the VS Code theme kind, "light" and "dark" force a palette. */
+body.vscode-dark:not([data-appearance="light"]),
+body.vscode-high-contrast:not(.vscode-high-contrast-light):not([data-appearance="light"]),
+body[data-appearance="dark"] {
+  --mh-bg: #1e1e20;
+  --mh-fg: #d1d1d6;
+  --mh-strong-fg: #f2f2f7;
+  --mh-muted: #8e8e93;
+  --mh-faint: #535358;
+  --mh-accent: #5b9bff;
+  --mh-code-bg: #29292c;
+  --mh-border: #38383c;
+  --mh-selection: rgba(91, 155, 255, 0.3);
+
+  --mh-tok-keyword: #f07aa0;
+  --mh-tok-string: #8fcf8f;
+  --mh-tok-comment: #6e6e73;
+  --mh-tok-number: #f0a55a;
+  --mh-tok-function: #7fa8ff;
+  --mh-tok-type: #c79bf2;
+  --mh-tok-property: #6cc4dd;
+  --mh-tok-meta: #f0a55a;
+}
+
+body[data-colors="vscode"] {
+  --mh-bg: var(--vscode-editor-background);
+  --mh-fg: var(--vscode-editor-foreground);
+  --mh-strong-fg: var(--vscode-editor-foreground);
+  --mh-selection: var(--vscode-editor-selectionBackground);
+  --mh-code-bg: var(--vscode-textCodeBlock-background);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--mh-bg);
+  color: var(--mh-fg);
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Editor frame */
+
+body .cm-editor {
+  height: 100%;
+  background: var(--mh-bg);
+  color: var(--mh-fg);
+  font-family: var(--mh-font);
+  font-size: var(--mh-size);
+  -webkit-font-smoothing: antialiased;
+}
+
+body .cm-editor.cm-focused {
+  outline: none;
+}
+
+body .cm-editor .cm-scroller {
+  font-family: var(--mh-font);
+  line-height: var(--mh-line);
+}
+
+body .cm-editor .cm-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--mh-width) + 2 * var(--mh-pad));
+  margin: 0 auto;
+  padding: 64px var(--mh-pad) 45vh;
+  flex-grow: 0;
+  caret-color: var(--mh-accent);
+}
+
+/* Korean reads better when words are not split across lines. */
+body .cm-editor .cm-content.cm-lineWrapping {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+body .cm-editor .cm-line {
+  padding: 0;
+}
+
+body .cm-editor .cm-cursor,
+body .cm-editor .cm-dropCursor {
+  border-left: 2px solid var(--mh-accent);
+}
+
+body .cm-editor .cm-selectionBackground,
+body .cm-editor.cm-focused .cm-selectionBackground {
+  background: var(--mh-selection) !important;
+}
+
+/* Markup that is shown while the cursor is inside an element */
+
+body .cm-editor .mh-syntax {
+  color: var(--mh-muted);
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+}
+
+/* Headings */
+
+body .cm-editor .cm-line.mh-h {
+  color: var(--mh-strong-fg);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+body .cm-editor .cm-line.mh-h1 {
+  font-size: 1.75em;
+  line-height: 1.3;
+  padding-top: 0.85em;
+  padding-bottom: 0.15em;
+}
+
+body .cm-editor .cm-line.mh-h2 {
+  font-size: 1.4em;
+  line-height: 1.35;
+  padding-top: 0.75em;
+  padding-bottom: 0.1em;
+}
+
+body .cm-editor .cm-line.mh-h3 {
+  font-size: 1.2em;
+  line-height: 1.4;
+  padding-top: 0.6em;
+}
+
+body .cm-editor .cm-line.mh-h4,
+body .cm-editor .cm-line.mh-h5,
+body .cm-editor .cm-line.mh-h6 {
+  font-size: 1.05em;
+  padding-top: 0.5em;
+}
+
+body .cm-editor .cm-line.mh-h6 {
+  color: var(--mh-muted);
+}
+
+/* `##` hangs in the margin; margin-left is set inline in `ch` of this font. */
+body .cm-editor .mh-hmark {
+  font-family: var(--mh-mono);
+  font-size: 0.6em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--mh-faint);
+}
+
+body .cm-editor .cm-line.mh-collapsed {
+  font-size: 0.4em;
+  line-height: 1;
+}
+
+/* Inline */
+
+body .cm-editor .mh-strong {
+  font-weight: 700;
+  color: var(--mh-strong-fg);
+}
+
+body .cm-editor .mh-em {
+  font-style: italic;
+}
+
+body .cm-editor .mh-strike {
+  color: var(--mh-muted);
+  text-decoration: line-through;
+}
+
+body .cm-editor .mh-inline-code {
+  font-family: var(--mh-mono);
+  font-size: 0.86em;
+  background: var(--mh-code-bg);
+  border-radius: 4px;
+  padding: 0.12em 0.32em;
+}
+
+body .cm-editor .mh-link {
+  color: var(--mh-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--mh-accent) 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+body.mh-mod .cm-editor .mh-link {
+  cursor: pointer;
+  text-decoration-color: currentColor;
+}
+
+body .cm-editor .mh-link-target {
+  overflow-wrap: anywhere;
+}
+
+body .cm-editor .mh-linkref {
+  color: var(--mh-muted);
+}
+
+body .cm-editor .mh-html {
+  color: var(--mh-muted);
+  font-family: var(--mh-mono);
+  font-size: 0.86em;
+}
+
+/* Blockquote */
+
+body .cm-editor .cm-line.mh-quote {
+  --mh-quote-pad: 1em;
+  padding-left: var(--mh-quote-pad);
+  border-left: 3px solid var(--mh-accent);
+  color: var(--mh-muted);
+}
+
+/* Nested quotes get one more bar per level. */
+body .cm-editor .cm-line.mh-quote.mh-quote-2 {
+  --mh-quote-pad: 2em;
+  background: linear-gradient(var(--mh-accent), var(--mh-accent)) no-repeat 0.85em 0 / 3px 100%;
+}
+
+body .cm-editor .cm-line.mh-quote.mh-quote-3 {
+  --mh-quote-pad: 3em;
+  background:
+    linear-gradient(var(--mh-accent), var(--mh-accent)) no-repeat 0.85em 0 / 3px 100%,
+    linear-gradient(var(--mh-accent), var(--mh-accent)) no-repeat 1.85em 0 / 3px 100%;
+}
+
+/* Lists and tasks
+ *
+ * The marker sits in a fixed-width gutter and the item text starts after it.
+ * Source indentation is hidden; depth (set inline as --mh-depth) decides the
+ * indent, and wrapped or continued lines hang under the item text.
+ */
+
+/* In px (from the base size) so code lines with a smaller font still line up. */
+body .cm-editor {
+  --mh-gutter: calc(var(--mh-size) * 1.75);
+  --mh-list-indent: calc(var(--mh-size) * 1.5);
+}
+
+body .cm-editor .cm-line.mh-li,
+body .cm-editor .cm-line.mh-li-cont {
+  padding-left: calc(var(--mh-quote-pad, 0px) + var(--mh-depth, 0) * var(--mh-list-indent) + var(--mh-gutter));
+}
+
+body .cm-editor .cm-line.mh-li {
+  text-indent: calc(-1 * var(--mh-gutter));
+}
+
+/* Code blocks inside list items line up with the item text. */
+body .cm-editor .cm-line.mh-in-li {
+  margin-left: calc(var(--mh-quote-pad, 0px) + var(--mh-depth, 0) * var(--mh-list-indent) + var(--mh-gutter));
+}
+
+body .cm-editor .mh-li-marker,
+body .cm-editor .mh-li-raw {
+  display: inline-block;
+  box-sizing: border-box;
+  text-align: right;
+  text-indent: 0;
+  white-space: pre;
+}
+
+body .cm-editor .mh-li-marker {
+  width: var(--mh-gutter);
+  padding-right: 0.5em;
+}
+
+body .cm-editor .mh-li-marker.mh-li-task {
+  padding-right: 0.4em;
+}
+
+body .cm-editor .mh-li-raw {
+  min-width: var(--mh-gutter);
+}
+
+body .cm-editor .mh-bullet,
+body .cm-editor .mh-bullet-raw,
+body .cm-editor .mh-olmark {
+  color: var(--mh-accent);
+}
+
+/* Drawn shapes instead of a glyph, so every level has the same size: disc, ring, square. */
+body .cm-editor .mh-bullet {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 0.42em;
+  height: 0.42em;
+  margin: 0 0.12em;
+  vertical-align: 0.12em;
+  border-radius: 50%;
+  background: var(--mh-accent);
+}
+
+body .cm-editor .mh-bullet.mh-bullet-1 {
+  background: transparent;
+  border: 1.5px solid var(--mh-accent);
+}
+
+body .cm-editor .mh-bullet.mh-bullet-2 {
+  width: 0.38em;
+  height: 0.38em;
+  border-radius: 1.5px;
+}
+
+body .cm-editor .mh-olmark {
+  font-variant-numeric: tabular-nums;
+}
+
+body .cm-editor .mh-checkbox {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 1.05em;
+  height: 1.05em;
+  vertical-align: -0.17em;
+  border: 1.5px solid var(--mh-faint);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+body .cm-editor .mh-checkbox:hover {
+  border-color: var(--mh-accent);
+}
+
+body .cm-editor .mh-checkbox.mh-checked {
+  background: var(--mh-accent);
+  border-color: var(--mh-accent);
+}
+
+body .cm-editor .mh-checkbox.mh-checked::after {
+  content: "";
+  position: absolute;
+  left: 32%;
+  top: 10%;
+  width: 26%;
+  height: 52%;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+body .cm-editor .cm-line.mh-task-done {
+  color: var(--mh-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--mh-faint);
+}
+
+/* Code blocks */
+
+body .cm-editor .cm-line.mh-codeblock {
+  font-family: var(--mh-mono);
+  font-size: 0.86em;
+  line-height: 1.6;
+  background: var(--mh-code-bg);
+  padding: 0 1.15em;
+}
+
+body .cm-editor .cm-line.mh-codeblock-first {
+  border-top-left-radius: var(--mh-radius);
+  border-top-right-radius: var(--mh-radius);
+}
+
+body .cm-editor .cm-line.mh-codeblock-last {
+  border-bottom-left-radius: var(--mh-radius);
+  border-bottom-right-radius: var(--mh-radius);
+}
+
+body .cm-editor .cm-line.mh-fence-hidden {
+  font-family: var(--mh-font);
+  font-size: 0.7em;
+  line-height: 2;
+}
+
+body .cm-editor .mh-codelang {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  color: var(--mh-muted);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+body .cm-editor .mh-tok-keyword { color: var(--mh-tok-keyword); }
+body .cm-editor .mh-tok-string { color: var(--mh-tok-string); }
+body .cm-editor .mh-tok-comment { color: var(--mh-tok-comment); font-style: italic; }
+body .cm-editor .mh-tok-number { color: var(--mh-tok-number); }
+body .cm-editor .mh-tok-function { color: var(--mh-tok-function); }
+body .cm-editor .mh-tok-type { color: var(--mh-tok-type); }
+body .cm-editor .mh-tok-property { color: var(--mh-tok-property); }
+body .cm-editor .mh-tok-tag { color: var(--mh-tok-keyword); }
+body .cm-editor .mh-tok-meta { color: var(--mh-tok-meta); }
+body .cm-editor .mh-tok-punct { color: var(--mh-muted); }
+body .cm-editor .mh-tok-inserted { color: var(--mh-tok-string); }
+body .cm-editor .mh-tok-deleted { color: var(--mh-tok-keyword); }
+
+/* Horizontal rule */
+
+body .cm-editor .mh-hr {
+  display: inline-block;
+  width: 100%;
+  height: 0;
+  vertical-align: middle;
+  border-top: 1px solid var(--mh-border);
+}
+
+/* Images */
+
+body .cm-editor .mh-image {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.3em 0;
+  vertical-align: bottom;
+}
+
+body .cm-editor .mh-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+body .cm-editor .mh-image-broken {
+  padding: 0.3em 0.75em;
+  border: 1px dashed var(--mh-border);
+  border-radius: 6px;
+  color: var(--mh-muted);
+  font-size: 0.85em;
+}
+
+body .cm-editor .mh-image-source {
+  overflow-wrap: anywhere;
+}
+
+/* Tables */
+
+body .cm-editor .mh-table-wrap {
+  overflow-x: auto;
+  padding: 0.35em 0;
+  cursor: text;
+}
+
+body .cm-editor .mh-table {
+  border-collapse: collapse;
+  font-size: 0.94em;
+  line-height: 1.5;
+}
+
+body .cm-editor .mh-table th,
+body .cm-editor .mh-table td {
+  min-width: 3em;
+  padding: 0.4em 0.8em;
+  border: 1px solid var(--mh-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+body .cm-editor .mh-table th {
+  font-weight: 600;
+  color: var(--mh-strong-fg);
+  background: var(--mh-code-bg);
+}
+
+body .cm-editor .mh-table code {
+  font-family: var(--mh-mono);
+  font-size: 0.9em;
+  background: var(--mh-code-bg);
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+}
+
+body .cm-editor .mh-table del {
+  color: var(--mh-muted);
+}
+
+body .cm-editor .cm-line.mh-table-raw {
+  font-family: var(--mh-mono);
+  font-size: 0.86em;
+}
+
+/* Front matter */
+
+body .cm-editor .cm-line.mh-frontmatter {
+  font-family: var(--mh-mono);
+  font-size: 0.8em;
+  color: var(--mh-muted);
+}
+
+/* Search panel */
+
+body .cm-editor .cm-panels {
+  background: var(--mh-bg);
+  color: var(--mh-fg);
+}
+
+body .cm-editor .cm-panels.cm-panels-top {
+  border-bottom: 1px solid var(--mh-border);
+}
+
+body .cm-editor .cm-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 40px 8px 14px;
+  font-family: var(--mh-font);
+  font-size: 12px;
+}
+
+body .cm-editor .cm-search br {
+  display: none;
+}
+
+body .cm-editor .cm-textfield {
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--mh-border);
+  border-radius: 6px;
+  background: var(--mh-code-bg);
+  color: var(--mh-fg);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+body .cm-editor .cm-textfield:focus {
+  border-color: var(--mh-accent);
+}
+
+body .cm-editor .cm-button {
+  margin: 0;
+  padding: 3px 10px;
+  border: 1px solid var(--mh-border);
+  border-radius: 6px;
+  background: transparent;
+  background-image: none;
+  color: var(--mh-fg);
+  font: inherit;
+}
+
+body .cm-editor .cm-button:hover {
+  border-color: var(--mh-muted);
+}
+
+body .cm-editor .cm-search label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--mh-muted);
+}
+
+body .cm-editor .cm-search button[name="close"] {
+  top: 6px;
+  right: 10px;
+  color: var(--mh-muted);
+  font-size: 18px;
+}
+
+body .cm-editor .cm-searchMatch {
+  background: color-mix(in srgb, var(--mh-accent) 18%, transparent);
+  outline: none;
+  border-radius: 2px;
+}
+
+body .cm-editor .cm-searchMatch-selected {
+  background: color-mix(in srgb, var(--mh-accent) 38%, transparent);
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--mh-fg) 18%, transparent);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 10px;
+}
+
+@media (max-width: 520px) {
+  :root {
+    --mh-pad: 20px;
+  }
+
+  body .cm-editor .cm-content {
+    padding-top: 28px;
+  }
+
+  /* No room to hang heading marks in a narrow pane. */
+  body .cm-editor .mh-hmark {
+    margin-left: 0 !important;
+  }
+}

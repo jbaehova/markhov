@@ -1,0 +1,10 @@
+**
+!dist/extension.js
+!dist/export.js
+!dist/webview/**
+!images/icon.png
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+dist/**/*.map

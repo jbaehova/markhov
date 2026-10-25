@@ -1,0 +1,276 @@
+{
+  "name": "markhov",
+  "displayName": "Markhov",
+  "description": "A quiet, minimal live preview editor for Markdown. Formatting renders as you type, with clean PDF export.",
+  "version": "0.1.0",
+  "publisher": "jbaehova",
+  "author": {
+    "name": "Johnny Bae"
+  },
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#F4F7FD",
+    "theme": "light"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbaehova/markhov.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jbaehova/markhov/issues"
+  },
+  "homepage": "https://github.com/jbaehova/markhov#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "markdown editor",
+    "live preview",
+    "wysiwyg",
+    "writing",
+    "notes",
+    "pdf",
+    "export pdf"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "package": "vsce package --no-dependencies",
+    "test:integration": "npm run build && node test/integration/run.mjs",
+    "vscode:prepublish": "rm -rf dist && node esbuild.mjs --production",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "markhov.editor",
+        "displayName": "Markhov",
+        "selector": [
+          {
+            "filenamePattern": "*.md"
+          },
+          {
+            "filenamePattern": "*.markdown"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "markhov.toggle",
+        "title": "Toggle Editor",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.openEditor",
+        "title": "Open in Markhov",
+        "category": "Markhov",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "markhov.openRaw",
+        "title": "Open as Raw Text",
+        "category": "Markhov",
+        "icon": "$(code)"
+      },
+      {
+        "command": "markhov.openWith",
+        "title": "Open with Markhov",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.exportPdf",
+        "title": "Export to PDF",
+        "category": "Markhov",
+        "icon": "$(file-pdf)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "markhov.toggle",
+        "key": "ctrl+shift+m",
+        "mac": "cmd+shift+m",
+        "when": "editorTextFocus && editorLangId == markdown && !isInDiffEditor"
+      },
+      {
+        "command": "markhov.toggle",
+        "key": "ctrl+shift+m",
+        "mac": "cmd+shift+m",
+        "when": "activeCustomEditorId == markhov.editor && !panelFocus && !sideBarFocus && !auxiliaryBarFocus"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "markhov.openEditor",
+          "when": "resourceLangId == markdown && activeEditor == workbench.editors.files.textFileEditor && !isInDiffEditor",
+          "group": "navigation"
+        },
+        {
+          "command": "markhov.exportPdf",
+          "when": "activeCustomEditorId == 'markhov.editor'",
+          "group": "navigation@1"
+        },
+        {
+          "command": "markhov.openRaw",
+          "when": "activeCustomEditorId == markhov.editor",
+          "group": "navigation"
+        },
+        {
+          "command": "markhov.exportPdf",
+          "when": "resourceLangId == markdown && activeEditor == workbench.editors.files.textFileEditor && !isInDiffEditor",
+          "group": "markhov"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "markhov.openWith",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        },
+        {
+          "command": "markhov.exportPdf",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "markhov.openEditor",
+          "when": "false"
+        },
+        {
+          "command": "markhov.openRaw",
+          "when": "false"
+        },
+        {
+          "command": "markhov.openWith",
+          "when": "false"
+        },
+        {
+          "command": "markhov.exportPdf",
+          "when": "resourceLangId == markdown || activeCustomEditorId == 'markhov.editor'"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Markhov",
+      "properties": {
+        "markhov.fontSize": {
+          "type": "number",
+          "default": 16,
+          "minimum": 10,
+          "maximum": 32,
+          "description": "Base font size of the editor in pixels."
+        },
+        "markhov.lineHeight": {
+          "type": "number",
+          "default": 1.65,
+          "minimum": 1,
+          "maximum": 3,
+          "description": "Line height of body text."
+        },
+        "markhov.maxWidth": {
+          "type": "number",
+          "default": 720,
+          "minimum": 320,
+          "description": "Maximum width of the text column in pixels."
+        },
+        "markhov.fontFamily": {
+          "type": "string",
+          "default": "",
+          "description": "Font family for body text. Leave empty to use the system font."
+        },
+        "markhov.appearance": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "light",
+            "dark"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Follow the light or dark kind of the current VS Code theme.",
+            "Always use the light palette.",
+            "Always use the dark palette."
+          ],
+          "description": "Light or dark appearance of the editor."
+        },
+        "markhov.colors": {
+          "type": "string",
+          "enum": [
+            "bear",
+            "vscode"
+          ],
+          "default": "bear",
+          "enumDescriptions": [
+            "Markhov palette, light or dark following markhov.appearance.",
+            "Use the background and foreground colors of the current VS Code theme."
+          ],
+          "description": "Color scheme of the editor."
+        },
+        "markhov.pdf.open": {
+          "type": "string",
+          "enum": [
+            "browser",
+            "default",
+            "none"
+          ],
+          "default": "none",
+          "enumDescriptions": [
+            "Open the PDF in the browser used for exporting (Chrome by default).",
+            "Open the PDF in the system's default PDF app.",
+            "Do not open the PDF."
+          ],
+          "description": "What to do with the PDF after exporting."
+        },
+        "markhov.pdf.pageSize": {
+          "type": "string",
+          "enum": [
+            "A4",
+            "Letter"
+          ],
+          "default": "A4",
+          "description": "Paper size of exported PDFs."
+        },
+        "markhov.pdf.chromePath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a Chrome, Chromium, Edge or Brave executable used for PDF export. Leave empty to detect it automatically."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@codemirror/collab": "^6.1.1",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/language-data": "^6.5.2",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@lezer/highlight": "^1.2.5",
+    "@lezer/markdown": "^1.8.1",
+    "markdown-it": "^15.0.3"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "^22.20.5",
+    "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

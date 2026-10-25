@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markhov harness</title>
+<link rel="stylesheet" href="../dist/webview/main.css">
+<script>
+  // Stand-in for the VS Code host: accepts every push, like an authority with no outside edits.
+  const params = new URLSearchParams(location.search);
+  document.documentElement.dataset.theme = params.get('theme') || 'light';
+  window.harness = { version: 0, sent: [], text: '' };
+  window.acquireVsCodeApi = () => ({
+    postMessage(message) {
+      harness.sent.push(message);
+      const reply = (m) => setTimeout(() => window.postMessage(m, '*'));
+      if (message.type === 'ready') {
+        fetch(params.get('doc') || 'sample.md').then((r) => r.text()).then((text) => {
+          harness.text = text;
+          reply({
+            type: 'init', text, version: 0,
+            config: { fontSize: 16, lineHeight: 1.65, maxWidth: 720, fontFamily: '', colors: 'bear', appearance: params.get('appearance') || 'auto' },
+            resources: { baseUri: new URL('./', location.href).href, workspaceUri: new URL('../', location.href).href },
+          });
+        });
+      } else if (message.type === 'push') {
+        const from = harness.version;
+        harness.version += message.updates.length;
+        reply({ type: 'updates', fromVersion: from, updates: message.updates });
+        reply({ type: 'pushResult', ok: true });
+      }
+    },
+  });
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  document.body.className = document.documentElement.dataset.theme === 'dark' ? 'vscode-dark' : 'vscode-light';
+</script>
+<script type="module" src="../dist/webview/main.js"></script>
+</body>
+</html>
