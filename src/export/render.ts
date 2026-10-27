@@ -21,7 +21,13 @@ export interface RenderOptions {
   fallbackTitle: string;
   /** Lets the caller report local images that do not exist, so they render as a placeholder. */
   imageExists?: (src: string) => boolean;
+  /** The editor's text settings, so the PDF reads like the editor. */
+  text?: { fontSize: number; lineHeight: number; fontFamily: string };
 }
+
+/** Blocks whose lines are all their own; the next block can only start after their last line. */
+const LEAF_BLOCKS = new Set(['paragraph_open', 'heading_open', 'fence', 'code_block', 'hr', 'html_block', 'table_open']);
+const BLANK_LINE = /^[\s>]*$/;
 
 export function splitFrontmatter(text: string): { body: string; title: string | null } {
   const match = FRONTMATTER.exec(text);
@@ -120,6 +126,29 @@ function createRenderer(parsers: Map<string, Parser>, options: RenderOptions) {
     });
   });
 
+  // Blank lines take a line of space each, as in the editor, instead of
+  // collapsing into one paragraph gap. Blocks have no margins of their own.
+  // Blank lines before the first block are left to the page margin.
+  md.core.ruler.push('markhov-blank-lines', (state) => {
+    const lines = state.src.split('\n');
+    const tokens: typeof state.tokens = [];
+    let cursor = 0;
+    for (const token of state.tokens) {
+      if (token.map && token.nesting >= 0 && token.map[0] > cursor && tokens.length) {
+        let blank = 0;
+        for (let n = cursor; n < token.map[0]; n++) if (BLANK_LINE.test(lines[n] ?? '')) blank++;
+        if (blank) {
+          const spacer = new state.Token('html_block', '', 0);
+          spacer.content = `<div class="blank" style="--lines: ${blank}"></div>\n`;
+          tokens.push(spacer);
+        }
+      }
+      if (token.map && token.nesting >= 0) cursor = Math.max(cursor, LEAF_BLOCKS.has(token.type) ? token.map[1] : token.map[0]);
+      tokens.push(token);
+    }
+    state.tokens = tokens;
+  });
+
   const renderImage = md.renderer.rules.image!;
   md.renderer.rules.image = (tokens, i, opts, env, self) => {
     const src = tokens[i].attrGet('src');
@@ -151,6 +180,13 @@ export async function renderDocument(text: string, options: RenderOptions): Prom
   const content = createRenderer(parsers, options).render(body);
   const pageTitle = title ?? firstHeading(body) ?? options.fallbackTitle;
   const lang = /[가-힣]/.test(body) ? 'ko' : 'en';
+  const settings = options.text;
+  // 16px in the editor prints as 10.5pt.
+  const typography = settings
+    ? `:root { --size: ${((10.5 * settings.fontSize) / 16).toFixed(2)}pt; --line: ${settings.lineHeight};${
+        settings.fontFamily.trim() ? ` --font: ${settings.fontFamily.replace(/[<>{};]/g, '')};` : ''
+      } }`
+    : '';
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -161,6 +197,7 @@ export async function renderDocument(text: string, options: RenderOptions): Prom
 <style>
 ${printCss}
 @page { size: ${options.pageSize}; }
+${typography}
 </style>
 </head>
 <body>

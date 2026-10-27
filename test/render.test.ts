@@ -77,3 +77,35 @@ describe('ordered lists', () => {
     expect(body(await renderDocument('3) a\n', options))).toContain('<li value="3" class="paren">a</li>');
   });
 });
+
+describe('blank lines', () => {
+  const blanks = (html: string) => [...html.matchAll(/--lines: (\d+)/g)].map((m) => Number(m[1]));
+
+  it('keep a line of space for each blank line, as the editor shows them', async () => {
+    const html = body(await renderDocument('# Title\n\none\n\n\n\ntwo\nthree\n', options));
+    expect(blanks(html)).toEqual([1, 3]);
+    expect(html.indexOf('--lines: 3')).toBeGreaterThan(html.indexOf('one'));
+    expect(html.indexOf('--lines: 3')).toBeLessThan(html.indexOf('two'));
+  });
+
+  it('leave blank lines before the first block to the page margin', async () => {
+    expect(blanks(body(await renderDocument('---\ntitle: x\n---\n\n\n# Title\n', options)))).toEqual([]);
+  });
+
+  it('add no space where the source has none', async () => {
+    expect(blanks(body(await renderDocument('### Head\n- a\n- b\n> quote\n', options)))).toEqual([]);
+  });
+
+  it('count blank lines inside quotes and between list items, but not inside code', async () => {
+    expect(blanks(body(await renderDocument('> a\n>\n> b\n', options)))).toEqual([1]);
+    expect(blanks(body(await renderDocument('- a\n\n- b\n', options)))).toEqual([1]);
+    expect(blanks(body(await renderDocument('```\na\n\n\nb\n```\n', options)))).toEqual([]);
+  });
+});
+
+describe('typography', () => {
+  it('follows the editor font size, line height and font', async () => {
+    const html = await renderDocument('x\n', { ...options, text: { fontSize: 20, lineHeight: 1.8, fontFamily: 'Georgia' } });
+    expect(html).toContain(':root { --size: 13.13pt; --line: 1.8; --font: Georgia; }');
+  });
+});

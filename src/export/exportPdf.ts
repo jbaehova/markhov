@@ -46,6 +46,7 @@ export async function exportPdf(uri?: vscode.Uri): Promise<void> {
     return;
   }
   const config = vscode.workspace.getConfiguration('markhov.pdf');
+  const editor = vscode.workspace.getConfiguration('markhov');
   const chrome = findChrome(config.get<string>('chromePath'));
   if (!chrome) {
     const action = await vscode.window.showErrorMessage(
@@ -73,6 +74,11 @@ export async function exportPdf(uri?: vscode.Uri): Promise<void> {
           pageSize: config.get<'A4' | 'Letter'>('pageSize', 'A4'),
           fallbackTitle: basename(document.uri.path).replace(MARKDOWN_PATH, ''),
           imageExists: localImageExists(folder, vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath),
+          text: {
+            fontSize: editor.get('fontSize', 16),
+            lineHeight: editor.get('lineHeight', 1.65),
+            fontFamily: editor.get('fontFamily', ''),
+          },
         });
         writeFileSync(htmlFile, html);
         await printToPdf(chrome, htmlFile, target.fsPath);
