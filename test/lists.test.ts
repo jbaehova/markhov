@@ -152,6 +152,16 @@ describe('Shift+Tab in lists', () => {
     expect(run(outdentListItem, '9. nine\n   1. ten|\n      - child').text).toBe('9. nine\n10. ten|\n    - child');
   });
 
+  it('moves a paragraph of its own out of the item', () => {
+    expect(run(outdentListItem, '- one\n    - a\n\n  sin|ce\n').text).toBe('- one\n    - a\n\nsin|ce\n');
+    expect(run(outdentListItem, '- one\n  - two\n\n    pa|ra\n    more').text).toBe('- one\n  - two\n\n  pa|ra\n  more');
+    expect(run(outdentListItem, '> - one\n>\n>   pa|ra').text).toBe('> - one\n>\n> pa|ra');
+  });
+
+  it('leaves the item alone on Tab in a paragraph of its own', () => {
+    expect(run(indentListItem, '- zero\n- one\n\n  pa|ra')).toEqual({ handled: true, text: '- zero\n- one\n\n  pa|ra' });
+  });
+
   it('swallows Shift+Tab on a top-level item', () => {
     expect(run(outdentListItem, '- on|e')).toEqual({ handled: true, text: '- on|e' });
   });

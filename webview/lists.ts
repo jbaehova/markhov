@@ -338,6 +338,19 @@ class ListBlock {
     }
   }
 
+  /**
+   * Moves the lines of a paragraph of the item's own out one level: to the
+   * parent item's text, or out of the list at the top level.
+   */
+  dedentParagraph(entry: Entry, paragraph: SyntaxNode, changes: ChangeSpec[]): void {
+    const doc = this.state.doc;
+    const first = doc.lineAt(paragraph.from);
+    const indent = countColumn(/^[ \t]*/.exec(first.text.slice(this.prefix(first)))![0], 4);
+    const parent = entry.parent;
+    const delta = (parent ? textColumn(parent, parent.col, parent.marker) : 0) - indent;
+    for (let n = first.number; n <= doc.lineAt(paragraph.to).number; n++) this.shift(doc.line(n), delta, changes);
+  }
+
   /** Indents or dedents a line by `delta` columns, behind any quote markup. */
   private shift(line: Line, delta: number, changes: ChangeSpec[]): void {
     if (!delta) return;
@@ -358,15 +371,31 @@ class ListBlock {
 }
 
 /**
+ * A paragraph of its own inside an item, set off by a blank line, as
+ * opposed to the item's first paragraph that starts on the marker line.
+ */
+function ownParagraph(state: EditorState, line: Line, item: SyntaxNode): SyntaxNode | null {
+  if (itemOnLine(state, line.from, line.to)) return null;
+  let node: SyntaxNode | null = syntaxTree(state).resolveInner(line.from + /^[\s>]*/.exec(line.text)![0].length, 1);
+  while (node && node.parent && !(node.parent.name === 'ListItem' && node.parent.from === item.from)) node = node.parent;
+  if (node?.name !== 'Paragraph') return null;
+  return state.doc.lineAt(node.from).number > state.doc.lineAt(item.from).number ? node : null;
+}
+
+/**
  * Tab nests the list items on the selected lines under the item before
  * them (at that item's text column, which is what Markdown needs for `1.`
  * lists); Shift+Tab moves them out to their parent's level. Children move
- * along, and numbered lists that changed are renumbered.
+ * along, and numbered lists that changed are renumbered. In a paragraph of
+ * its own inside an item, Shift+Tab moves just that paragraph out one
+ * level, so text indented into a list by accident can be taken back out;
+ * Tab leaves it alone rather than moving the whole item.
  */
 function shiftListItems(direction: 1 | -1): Command {
   return (view) => {
     const { state } = view;
     const blocks = new Map<number, { block: ListBlock; entries: Entry[] }>();
+    const paragraphs: { item: SyntaxNode; paragraph: SyntaxNode }[] = [];
     let inList = false;
 
     for (const range of state.selection.ranges) {
@@ -376,6 +405,11 @@ function shiftListItems(direction: 1 | -1): Command {
         const item = itemForLine(state, line);
         if (!item) continue;
         inList = true;
+        const paragraph = ownParagraph(state, line, item);
+        if (paragraph) {
+          if (!paragraphs.some((p) => p.paragraph.from === paragraph.from)) paragraphs.push({ item, paragraph });
+          continue;
+        }
         const block = ListBlock.around(state, item);
         if (!blocks.has(block.key)) blocks.set(block.key, { block, entries: [] });
         const target = blocks.get(block.key)!;
@@ -393,6 +427,14 @@ function shiftListItems(direction: 1 | -1): Command {
       let changed = false;
       for (const entry of top) changed = (direction > 0 ? block.indent(entry) : block.outdent(entry)) || changed;
       if (changed) changes.push(...block.changes());
+    }
+    // Paragraphs move only on their own; selected along with items, the items win.
+    if (direction < 0 && !blocks.size) {
+      for (const { item, paragraph } of paragraphs) {
+        const block = ListBlock.around(state, item);
+        const entry = block.entry(item, true);
+        if (entry) block.dedentParagraph(entry, paragraph, changes);
+      }
     }
     if (changes.length) {
       view.dispatch({ changes, scrollIntoView: true, userEvent: direction > 0 ? 'input.indent' : 'delete.dedent' });
