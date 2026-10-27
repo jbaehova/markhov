@@ -47,7 +47,14 @@ async function updateSetting(key: string, value: string | number): Promise<void>
     config.inspect(key)?.workspaceValue === undefined
       ? vscode.ConfigurationTarget.Global
       : vscode.ConfigurationTarget.Workspace;
-  await config.update(key, value, target);
+  try {
+    await config.update(key, value, target);
+  } catch {
+    // Right after an update, VS Code knows only the old version's settings until the window reloads.
+    const reload = 'Reload Window';
+    const choice = await vscode.window.showWarningMessage('Reload the window to finish updating Markhov.', reload);
+    if (choice === reload) await vscode.commands.executeCommand('workbench.action.reloadWindow');
+  }
 }
 
 /** Commands behind the editor's right-click menu (see menu.ts). */
