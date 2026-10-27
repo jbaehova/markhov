@@ -1,5 +1,5 @@
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
-import { ensureSyntaxTree } from '@codemirror/language';
+import { ensureSyntaxTree, syntaxTree } from '@codemirror/language';
 import { EditorSelection, EditorState, type Transaction } from '@codemirror/state';
 import type { EditorView } from '@codemirror/view';
 import { describe, expect, it } from 'vitest';
@@ -50,6 +50,19 @@ function run(command: (view: EditorView) => boolean, source: string): { handled:
   const { main } = state.selection;
   const text = state.doc.toString();
   return { handled, text: main.empty ? text.slice(0, main.head) + '|' + text.slice(main.head) : text };
+}
+
+/** Names of the block nodes a document parses into, outermost first. */
+function blocks(doc: string): string[] {
+  const state = EditorState.create({ doc, extensions: [markdown({ base: markdownLanguage, extensions: [EmptyListItems] })] });
+  ensureSyntaxTree(state, state.doc.length, 5000);
+  const names: string[] = [];
+  syntaxTree(state).iterate({
+    enter: (node) => {
+      if (/^(?:BulletList|OrderedList|ListItem|Paragraph|SetextHeading\d)$/.test(node.name)) names.push(node.name);
+    },
+  });
+  return names;
 }
 
 /** Types a space at the cursor, the way the editor's input handler sees it. */
@@ -211,6 +224,11 @@ describe('Backspace on an empty list item', () => {
     expect(run(deleteEmptyListItem, '> - one\n> - |').text).toBe('> - one\n> |');
   });
 
+  it('moves the children of a removed item out into its place', () => {
+    expect(run(deleteEmptyListItem, '### Heading\n- |\n    - child').text).toBe('### Heading\n|\n- child');
+    expect(run(deleteEmptyListItem, '- a\n  - |\n    - b\n      - c').text).toBe('- a\n|\n  - b\n    - c');
+  });
+
   it('leaves items with text to the default Backspace', () => {
     expect(run(deleteEmptyListItem, '- one|').handled).toBe(false);
     expect(run(deleteEmptyListItem, '- |one').handled).toBe(false);
@@ -237,7 +255,29 @@ describe('Enter on a continued line of an item', () => {
   it('leaves lazy continuation lines and code to the default Enter', () => {
     expect(run(continueListItem, '- one\nlazy|').handled).toBe(false);
     expect(run(continueListItem, '- one\n  ```\n  code|\n  ```').handled).toBe(false);
-    expect(run(continueListItem, '- one|').handled).toBe(false);
+  });
+});
+
+describe('Enter in an item', () => {
+  it('starts the next item right below, even in a loose list', () => {
+    expect(run(continueListItem, '- one\n\n- two|').text).toBe('- one\n\n- two\n- |');
+    expect(run(continueListItem, '- one\n  - sub\n  \n- two|\n- three').text).toBe('- one\n  - sub\n  \n- two\n- |\n- three');
+  });
+
+  it('moves the text after the cursor into the new item', () => {
+    expect(run(continueListItem, '- tw|o').text).toBe('- tw\n- |o');
+  });
+
+  it('numbers the new item and continues tasks', () => {
+    expect(run(continueListItem, '1. one|\n\n2. two').text).toBe('1. one\n2. |\n\n3. two');
+    expect(run(continueListItem, '- [x] done|').text).toBe('- [x] done\n- [ ] |');
+  });
+
+  it('keeps the default inside the marker or checkbox and in code', () => {
+    expect(run(continueListItem, '|- one').handled).toBe(false);
+    expect(run(continueListItem, '1|. one').handled).toBe(false);
+    expect(run(continueListItem, '- [|x] one').handled).toBe(false);
+    expect(run(continueListItem, '- ```js|').handled).toBe(false);
   });
 });
 
@@ -248,6 +288,18 @@ describe('Parsing empty items', () => {
 
   it('reads a bare number under a bullet as an item', () => {
     expect(run(exitEmptyListItem, '- one\n  1. |').text).toBe('- one\n- |');
+  });
+
+  it('starts a list with a typed - or 1. right under a paragraph', () => {
+    expect(blocks('Some text\n-')).toEqual(['Paragraph', 'BulletList', 'ListItem']);
+    expect(blocks('Some text\n- ')).toEqual(['Paragraph', 'BulletList', 'ListItem']);
+    expect(blocks('Some text\n1. ')).toEqual(['Paragraph', 'OrderedList', 'ListItem']);
+    expect(blocks('> quoted\n> - ')).toEqual(['Paragraph', 'BulletList', 'ListItem']);
+  });
+
+  it('leaves other numbers and heading underlines to Markdown', () => {
+    expect(blocks('Some text\n3. ')).toEqual(['Paragraph']);
+    expect(blocks('Some text\n---')).toEqual(['SetextHeading2']);
   });
 });
 

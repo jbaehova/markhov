@@ -50,7 +50,7 @@ Lists behave the way you expect from Notion, Bear or Typora:
 - <kbd>Enter</kbd> continues a list. Numbers count up and tasks start unchecked. <kbd>Shift</kbd>+<kbd>Enter</kbd> adds a line to the same item instead.
 - <kbd>Enter</kbd> on an empty item moves it up one level, back into the parent list, or leaves the list when it is already at the top.
 - <kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd> work from anywhere in the item and on several selected items at once. Children move along, the indentation always matches what Markdown needs under `1.` or `-`, and numbered lists renumber themselves.
-- <kbd>Backspace</kbd> on an empty item removes it. At the start of an item with text it removes the bullet.
+- <kbd>Backspace</kbd> on an empty item removes it, and items nested under it move out one level. At the start of an item with text it removes the bullet.
 - Typing `- ` or `1. ` on an empty item switches it between bullets and numbers, and `[] ` makes it a task. Undo once to keep what you typed.
 
 Click a checkbox to toggle it, or click a table cell to edit its source.

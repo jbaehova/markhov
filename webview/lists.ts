@@ -9,22 +9,26 @@ const LISTS = new Set(['BulletList', 'OrderedList']);
 const VERBATIM = new Set(['FencedCode', 'CodeBlock', 'HTMLBlock', 'Table', 'CommentBlock']);
 const ORDERED = /^(\d+)([.)])$/;
 const EMPTY_MARKER = /^(?:[-*+]|\d{1,9}[.)])[ \t]*$/;
+/** A `-` or `1. ` just typed, which may start a list under a paragraph. */
+const EMPTY_START = /^(?:[-*+][ \t]*|1[.)][ \t]+)$/;
 
 /**
- * Inside a list, a bare `- ` or `1. ` line starts an item even right under
- * a paragraph. Lezer already allows that for bullets inside bullet lists;
- * without it, a fresh bullet under a numbered item would turn the item's
- * text into a setext heading, and a fresh `1.` under a bullet would just
- * continue the text.
+ * A bare `-` or `1. ` line starts an item even right under a paragraph,
+ * so the bullet shows as soon as it is typed. Markdown lets only items with
+ * text interrupt a paragraph; without this, `-` would turn the paragraph
+ * into a setext heading until the first letter (`---` still does). Inside
+ * a list, `1.` counts even before the space, so a fresh `1.` under a bullet
+ * does not just continue the text.
  */
 export const EmptyListItems: MarkdownConfig = {
   parseBlock: [
     {
       name: 'EmptyListItem',
       endLeaf(cx, line) {
-        if (!EMPTY_MARKER.test(line.text.slice(line.pos))) return false;
+        const rest = line.text.slice(line.pos);
+        if (!EMPTY_MARKER.test(rest)) return false;
         for (let depth = cx.depth - 1; depth >= 0; depth--) if (cx.parentType(depth).name === 'ListItem') return true;
-        return false;
+        return EMPTY_START.test(rest);
       },
     },
   ],
@@ -269,6 +273,20 @@ class ListBlock {
     return true;
   }
 
+  /**
+   * Drops an item and moves its children out into its place, so they do not
+   * stay indented under nothing (four spaces outside a list make code).
+   */
+  dissolve(entry: Entry): void {
+    const siblings = this.siblings(entry);
+    siblings.splice(siblings.indexOf(entry), 1, ...entry.children);
+    for (const child of entry.children) {
+      child.parent = entry.parent;
+      child.rel = entry.rel;
+      child.moved = true;
+    }
+  }
+
   /** Drops an item from the model; with `split`, the items after it start a list of their own. */
   remove(entry: Entry, split: boolean): void {
     const siblings = this.siblings(entry);
@@ -431,7 +449,8 @@ export const exitEmptyListItem: Command = (view) => {
 /**
  * Backspace on an empty item removes the whole item, indentation included,
  * so a stray item goes away with two presses (the item, then the line
- * break), as in Notion or Google Docs. Numbers after it close up.
+ * break), as in Notion or Google Docs. Numbers after it close up, and its
+ * children move out one level into its place.
  */
 export const deleteEmptyListItem: Command = (view) => {
   const { state } = view;
@@ -443,8 +462,8 @@ export const deleteEmptyListItem: Command = (view) => {
   if (!match || !item) return false;
   const block = ListBlock.around(state, item);
   const entry = block.entry(item);
-  if (!entry || entry.children.length) return false;
-  block.remove(entry, false);
+  if (!entry) return false;
+  block.dissolve(entry);
   view.dispatch({
     changes: [{ from: line.from + match[1].length, to: line.to }, ...block.changes()],
     scrollIntoView: true,
@@ -482,11 +501,36 @@ export const breakListItem: Command = (view) => {
   return true;
 };
 
+/** The innermost list item around `pos` when its marker is on `line`. */
+function markedItemAt(state: EditorState, line: Line, pos: number): SyntaxNode | null {
+  for (let node: SyntaxNode | null = syntaxTree(state).resolveInner(pos, -1); node; node = node.parent) {
+    if (VERBATIM.has(node.name)) return null;
+    if (node.name === 'ListItem') {
+      const mark = node.getChild('ListMark');
+      return mark && mark.from >= line.from ? node : null;
+    }
+  }
+  return null;
+}
+
+/** The item a continued line of text belongs to, unless the line only lazily continues it. */
+function continuedItem(state: EditorState, line: Line): SyntaxNode | null {
+  let node: SyntaxNode | null = syntaxTree(state).resolveInner(line.from + /^[\s>]*/.exec(line.text)![0].length, 1);
+  // A task's text is a Task node rather than a Paragraph.
+  while (node && node.name !== 'Paragraph' && node.name !== 'Task') {
+    node = VERBATIM.has(node.name) || node.name === 'ListItem' ? null : node.parent;
+  }
+  const item = node?.parent;
+  return item?.name === 'ListItem' ? item : null;
+}
+
 /**
- * Enter on a continued line of an item's text (one made with Shift+Enter)
- * starts the next item, as in Typora or Obsidian, instead of adding yet
- * another line to the same item. Lines that only lazily continue an item
- * keep the plain Enter.
+ * Enter in an item's text starts the next item right below it, as in
+ * Notion, Bear or Typora. CodeMirror's own Enter adds a blank line first in
+ * a loose list, which reads as a gap. On a continued line of the text (one
+ * made with Shift+Enter) it starts the next item too, instead of adding yet
+ * another line to the same item. Lines that only lazily continue an item,
+ * and the cursor inside the marker or checkbox, keep the plain Enter.
  */
 export const continueListItem: Command = (view) => {
   const { state } = view;
@@ -494,20 +538,20 @@ export const continueListItem: Command = (view) => {
   const doc = state.doc;
   const line = doc.lineAt(main.from);
   if (state.selection.ranges.length !== 1 || doc.lineAt(main.to).number !== line.number) return false;
-  if (!line.text.trim() || itemOnLine(state, line.from, line.to)) return false;
-  let node: SyntaxNode | null = syntaxTree(state).resolveInner(line.from + /^[\s>]*/.exec(line.text)![0].length, 1);
-  // A task's text is a Task node rather than a Paragraph.
-  while (node && node.name !== 'Paragraph' && node.name !== 'Task') {
-    node = VERBATIM.has(node.name) || node.name === 'ListItem' ? null : node.parent;
+  if (!line.text.trim()) return false;
+  const marked = itemOnLine(state, line.from, line.to) !== null;
+  const item = marked ? markedItemAt(state, line, main.from) : continuedItem(state, line);
+  if (!item) return false;
+  if (marked) {
+    const markup = item.getChild('Task')?.getChild('TaskMarker') ?? item.getChild('ListMark')!;
+    if (main.from < markup.to) return false;
   }
-  const item = node?.parent;
-  if (!item || item.name !== 'ListItem') return false;
   const block = ListBlock.around(state, item);
   const entry = block.entry(item, true);
   if (!entry) return false;
   const prefix = block.prefix(line);
   const indent = countColumn(/^[ \t]*/.exec(line.text.slice(prefix))![0], 4);
-  if (indent < textColumn(entry, entry.col, entry.marker)) return false;
+  if (!marked && indent < textColumn(entry, entry.col, entry.marker)) return false;
 
   const ordered = isOrdered(entry.kind);
   const task = item.getChild('Task') ? ' [ ]' : '';
