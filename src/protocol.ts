@@ -35,5 +35,6 @@ export type WebviewMessage =
   | { type: 'ready' }
   | { type: 'push'; version: number; updates: WireUpdate[] }
   | { type: 'pull'; version: number }
+  | { type: 'focus'; focused: boolean }
   | { type: 'openLink'; href: string }
   | { type: 'error'; message: string };

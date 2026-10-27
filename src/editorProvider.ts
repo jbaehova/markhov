@@ -1,9 +1,13 @@
 import * as vscode from 'vscode';
 import { Authority } from './authority';
+import { DiskSync } from './diskSync';
 import { type Width, WIDTHS } from './menu';
 import type { HostMessage, MarkhovConfig, Resources, WebviewMessage } from './protocol';
 
 export const VIEW_TYPE = 'markhov.editor';
+
+/** The longest a save waits for keystrokes that are still on their way into the document. */
+const FLUSH_MS = 1000;
 
 /** What the webviews reported, for the Output panel and the integration tests. */
 export const diagnostics = { ready: 0, errors: [] as string[] };
@@ -37,9 +41,24 @@ function hasScheme(href: string): boolean {
 }
 
 export class MarkhovEditorProvider implements vscode.CustomTextEditorProvider {
+  /** The panels this extension host serves, with the document each one shows. */
+  private readonly panels = new Map<vscode.WebviewPanel, string>();
+  /** One per document open in Markhov, shared by its panels. */
+  private readonly disks = new Map<string, DiskSync>();
+
   constructor(private readonly context: vscode.ExtensionContext) {}
 
+  /** Whether a panel of this extension host shows `uri` in the given editor column. */
+  serves(uri: vscode.Uri, viewColumn: vscode.ViewColumn): boolean {
+    const key = uri.toString();
+    for (const [panel, shown] of this.panels) {
+      if (shown === key && (panel.viewColumn === undefined || panel.viewColumn === viewColumn)) return true;
+    }
+    return false;
+  }
+
   async resolveCustomTextEditor(document: vscode.TextDocument, panel: vscode.WebviewPanel): Promise<void> {
+    this.panels.set(panel, document.uri.toString());
     const webview = panel.webview;
     const folder = document.uri.scheme === 'untitled' ? undefined : dirname(document.uri);
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
@@ -74,6 +93,11 @@ export class MarkhovEditorProvider implements vscode.CustomTextEditorProvider {
       post,
     );
 
+    const key = document.uri.toString();
+    let disk = this.disks.get(key);
+    if (!disk) this.disks.set(key, (disk = new DiskSync(document, VIEW_TYPE)));
+    const detach = disk.attach(panel, authority);
+
     const resources: Resources = {
       baseUri: folder ? `${webview.asWebviewUri(folder).toString()}/` : null,
       workspaceUri: workspaceFolder ? `${webview.asWebviewUri(workspaceFolder.uri).toString()}/` : null,
@@ -82,6 +106,12 @@ export class MarkhovEditorProvider implements vscode.CustomTextEditorProvider {
     const subscriptions = [
       vscode.workspace.onDidChangeTextDocument((event) => {
         if (event.document.uri.toString() === document.uri.toString()) authority.documentChanged();
+      }),
+      // Cmd+S right after a keystroke: the save waits until the keystroke is in the document.
+      vscode.workspace.onWillSaveTextDocument((event) => {
+        if (event.document.uri.toString() !== document.uri.toString()) return;
+        // Capped, so a stuck edit cannot hold the save up.
+        event.waitUntil(Promise.race([authority.flushed(), new Promise((resolve) => setTimeout(resolve, FLUSH_MS))]));
       }),
       vscode.workspace.onDidChangeConfiguration((event) => {
         if (event.affectsConfiguration('markhov')) post({ type: 'config', config: readConfig() });
@@ -98,6 +128,9 @@ export class MarkhovEditorProvider implements vscode.CustomTextEditorProvider {
           case 'pull':
             authority.pull(message.version);
             break;
+          case 'focus':
+            disk.setFocused(panel, message.focused);
+            break;
           case 'openLink':
             void this.openLink(message.href, folder);
             break;
@@ -107,7 +140,15 @@ export class MarkhovEditorProvider implements vscode.CustomTextEditorProvider {
         }
       }),
     ];
-    panel.onDidDispose(() => subscriptions.forEach((s) => s.dispose()));
+    panel.onDidDispose(() => {
+      this.panels.delete(panel);
+      subscriptions.forEach((s) => s.dispose());
+      detach.dispose();
+      if (!disk.attached) {
+        disk.dispose();
+        this.disks.delete(key);
+      }
+    });
   }
 
   private async openLink(href: string, folder: vscode.Uri | undefined): Promise<void> {

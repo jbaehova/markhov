@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { diagnostics, MarkhovEditorProvider, VIEW_TYPE } from './editorProvider';
 import { MENU, optionCommand } from './menu';
+import { reopenOrphanedTabs } from './orphans';
 
 const MARKDOWN_PATH = /\.(md|markdown)$/i;
 
@@ -75,11 +76,13 @@ function registerMenu(context: vscode.ExtensionContext): vscode.Disposable[] {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+  const provider = new MarkhovEditorProvider(context);
   context.subscriptions.push(
-    vscode.window.registerCustomEditorProvider(VIEW_TYPE, new MarkhovEditorProvider(context), {
+    vscode.window.registerCustomEditorProvider(VIEW_TYPE, provider, {
       webviewOptions: { retainContextWhenHidden: true },
       supportsMultipleEditorsPerDocument: true,
     }),
+    reopenOrphanedTabs(provider),
     vscode.commands.registerCommand('markhov.toggle', async () => {
       const target = activeTarget();
       if (target) await reopenActive(target);

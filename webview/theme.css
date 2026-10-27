@@ -630,6 +630,30 @@ body .cm-editor .cm-searchMatch-selected {
   border-radius: 10px;
 }
 
+/* Shown while the host does not answer and editing is paused. */
+.mh-notice {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 10;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+  padding: 8px 14px;
+  border: 1px solid var(--mh-border);
+  border-radius: var(--mh-radius);
+  background: var(--mh-code-bg);
+  color: var(--mh-strong-fg);
+  font-family: var(--mh-font);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.mh-notice[hidden] {
+  display: none;
+}
+
 @media (max-width: 520px) {
   :root {
     --mh-pad: 20px;

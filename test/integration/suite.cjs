@@ -69,6 +69,15 @@ exports.run = async function run() {
     await sleep(300);
   });
 
+  await check('a file written on disk while the document has unsaved edits is merged in', async () => {
+    // What an agent does: edit the file as saved, not knowing about the unsaved lines.
+    fs.writeFileSync(uri.fsPath, fs.readFileSync(uri.fsPath, 'utf8') + '\nAGENT LINE\n');
+    // With Markhov focused the document is reverted to the file first, so wait for the merged text.
+    await waitFor('merged agent line', () => doc.getText().includes('AGENT LINE') && doc.getText().includes('UNSAVED LINE'), 5000);
+    assert.ok(doc.getText().startsWith('<!-- external -->\n'), 'outside edit lost');
+    assert.equal(doc.getText().match(/AGENT LINE/g).length, 1, 'agent line merged twice');
+  });
+
   await check('toggle goes back to raw text in place', async () => {
     await vscode.commands.executeCommand('markhov.toggle');
     await waitFor('text tab', () => isText(activeInput()));

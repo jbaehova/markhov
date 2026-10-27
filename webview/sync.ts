@@ -4,6 +4,9 @@ import { type EditorView, ViewPlugin } from '@codemirror/view';
 import type { WireUpdate } from '../src/protocol';
 import { post } from './host';
 
+/** A push the host has not answered in this long means the host is gone (an extension host restart). */
+const ANSWER_MS = 4000;
+
 /** Collab client side of the document sync. The extension host is the authority. */
 export class SyncClient {
   readonly clientID = Math.random().toString(36).slice(2);
@@ -11,6 +14,10 @@ export class SyncClient {
   private pushing = false;
   private pushedVersion = -1;
   private scheduled = false;
+  private silence: ReturnType<typeof setTimeout> | undefined;
+  private lost = false;
+  /** Called when the host stops answering and again when it is back. */
+  onConnection: (connected: boolean) => void = () => {};
 
   extension(startVersion: number): Extension {
     const client = this;
@@ -57,6 +64,15 @@ export class SyncClient {
     this.pushedVersion = -1;
   }
 
+  /** Any message from the host shows it is still there. */
+  heard(): void {
+    clearTimeout(this.silence);
+    this.silence = undefined;
+    if (!this.lost) return;
+    this.lost = false;
+    this.onConnection(true);
+  }
+
   private schedulePush(): void {
     if (this.scheduled) return;
     this.scheduled = true;
@@ -73,6 +89,10 @@ export class SyncClient {
     if (!updates.length) return;
     this.pushing = true;
     this.pushedVersion = getSyncedVersion(view.state);
+    this.silence ??= setTimeout(() => {
+      this.lost = true;
+      this.onConnection(false);
+    }, ANSWER_MS);
     post({
       type: 'push',
       version: this.pushedVersion,

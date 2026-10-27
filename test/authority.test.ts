@@ -1,7 +1,8 @@
 import { collab, getSyncedVersion, receiveUpdates, sendableUpdates } from '@codemirror/collab';
 import { ChangeSet, EditorState } from '@codemirror/state';
 import { describe, expect, it } from 'vitest';
-import { Authority, diffToChanges, type DocumentPort, type TextEditOp } from '../src/authority';
+import { Authority, type DocumentPort, type TextEditOp } from '../src/authority';
+import { diffToChanges } from '../src/diff';
 import type { HostMessage } from '../src/protocol';
 
 /** In-memory stand-in for a VS Code TextDocument, keeping its own line endings. */
@@ -147,5 +148,42 @@ describe('Authority', () => {
     expect(client.state.doc.toString()).toBe(document.text);
     expect(document.text.startsWith('# head 28\n')).toBe(true);
     expect(document.text).toContain('line 29\n');
+  });
+
+  it('sends a hold as one update', async () => {
+    const document = new FakeDocument('one\ntwo\n');
+    const inbox: HostMessage[] = [];
+    const authority = new Authority(document, (m) => inbox.push(m));
+    await authority.hold(async () => {
+      // Revert to the file, then put the merged text back, as DiskSync does.
+      document.text = 'one\n';
+      authority.documentChanged();
+      document.text = 'one\ntwo\nthree\n';
+      authority.documentChanged();
+    });
+    await authority.idle();
+    const updates = inbox.flatMap((m) => (m.type === 'updates' ? m.updates : []));
+    expect(updates).toHaveLength(1);
+    const spans: [number, number, string][] = [];
+    ChangeSet.fromJSON(updates[0].changes).iterChanges((fromA, toA, _fromB, _toB, inserted) =>
+      spans.push([fromA, toA, inserted.toString()]),
+    );
+    // Only the net change: "two" was never deleted and typed again.
+    expect(spans).toEqual([[8, 8, 'three\n']]);
+  });
+
+  it('keeps typing that arrives during a hold', async () => {
+    const { document, client, authority, deliver } = setup('one\ntwo\n');
+    const held = authority.hold(async () => {
+      document.text = 'one\ntwo\nthree\n';
+    });
+    client.edit(0, 0, '# ');
+    client.push(authority);
+    await held;
+    await deliver();
+    client.push(authority);
+    await deliver();
+    expect(document.text).toBe('# one\ntwo\nthree\n');
+    expect(client.state.doc.toString()).toBe(document.text);
   });
 });

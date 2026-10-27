@@ -4,7 +4,7 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { syntaxHighlighting } from '@codemirror/language';
 import { languages } from '@codemirror/language-data';
 import { search, searchKeymap } from '@codemirror/search';
-import { EditorSelection, EditorState, type Extension, Prec } from '@codemirror/state';
+import { Compartment, EditorSelection, EditorState, type Extension, Prec } from '@codemirror/state';
 import { drawSelection, dropCursor, EditorView, keymap } from '@codemirror/view';
 import type { MarkhovConfig, Resources } from '../src/protocol';
 import { formattingKeymap } from './commands';
@@ -30,6 +30,25 @@ const sync = new SyncClient();
 let view: EditorView | null = null;
 let resources: Resources = { baseUri: null, workspaceUri: null };
 
+/** Editing pauses while the host does not answer, so nothing is typed that would never reach the file. */
+const editing = new Compartment();
+const paused = [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+let connected = true;
+
+const notice = document.createElement('div');
+notice.className = 'mh-notice';
+notice.hidden = true;
+notice.textContent = `Markhov lost its connection to VS Code, so editing is paused. Press ${
+  /Mac/.test(navigator.platform) ? 'Cmd' : 'Ctrl'
+}+Shift+M twice to reconnect.`;
+document.body.append(notice);
+
+sync.onConnection = (value) => {
+  connected = value;
+  notice.hidden = value;
+  view?.dispatch({ effects: editing.reconfigure(value ? [] : paused) });
+};
+
 const compositionRefresh = EditorView.domEventHandlers({
   compositionend(_event, view) {
     setTimeout(() => view.dispatch({ effects: refresh.of(null) }));
@@ -39,6 +58,7 @@ const compositionRefresh = EditorView.domEventHandlers({
 
 function extensions(version: number): Extension[] {
   return [
+    editing.of(connected ? [] : paused),
     sync.extension(version),
     resourcesFacet.of(resources),
     focusTracking,
@@ -88,6 +108,7 @@ function applyConfig(config: MarkhovConfig): void {
 }
 
 onHostMessage((message) => {
+  sync.heard();
   switch (message.type) {
     case 'init':
       applyConfig(message.config);
@@ -126,9 +147,12 @@ document.addEventListener('keydown', (event) => {
 });
 
 // The webview gets focus when its tab is activated; hand it to the editor.
+// The host is told, since it only reverts the document when Markhov has focus.
 window.addEventListener('focus', () => {
   if (view && !view.hasFocus) view.focus();
+  post({ type: 'focus', focused: true });
 });
+window.addEventListener('blur', () => post({ type: 'focus', focused: false }));
 
 // Surface webview failures (CSP violations, chunk loading) in the Markhov output channel.
 window.addEventListener('error', (event) => post({ type: 'error', message: event.message }));
@@ -139,3 +163,4 @@ document.addEventListener('securitypolicyviolation', (event) =>
 
 trackModifier();
 post({ type: 'ready' });
+if (document.hasFocus()) post({ type: 'focus', focused: true });

@@ -1,4 +1,5 @@
 import { ChangeSet, Text } from '@codemirror/state';
+import { diffToChanges } from './diff';
 import type { HostMessage, WireUpdate } from './protocol';
 
 export const HOST_CLIENT_ID = 'host';
@@ -29,20 +30,6 @@ function textOf(text: string): Text {
   return Text.of(text.split('\n'));
 }
 
-/** A single replacement covering everything between the common prefix and suffix of `a` and `b`. */
-export function diffToChanges(a: string, b: string): ChangeSet {
-  const min = Math.min(a.length, b.length);
-  let start = 0;
-  while (start < min && a.charCodeAt(start) === b.charCodeAt(start)) start++;
-  let endA = a.length;
-  let endB = b.length;
-  while (endA > start && endB > start && a.charCodeAt(endA - 1) === b.charCodeAt(endB - 1)) {
-    endA--;
-    endB--;
-  }
-  return ChangeSet.of({ from: start, to: endA, insert: b.slice(start, endB) }, a.length);
-}
-
 /**
  * Central authority for one webview client. Keeps the text the client was
  * last told about, applies client pushes to the real document and turns
@@ -53,6 +40,7 @@ export class Authority {
   private log: WireUpdate[] = [];
   private base = 0;
   private applying = false;
+  private holds = 0;
   private queue: Promise<void> = Promise.resolve();
 
   constructor(
@@ -75,6 +63,15 @@ export class Authority {
     return this.queue;
   }
 
+  /**
+   * Resolves once the client's pushes so far are in the document, for a
+   * save to wait on. It does not wait behind a hold, whose revert would
+   * otherwise wait for that same save.
+   */
+  flushed(): Promise<void> {
+    return this.holds ? Promise.resolve() : this.queue;
+  }
+
   documentChanged(): void {
     // Our own edits are reconciled once applyEdit settles.
     if (this.applying) return;
@@ -87,6 +84,28 @@ export class Authority {
 
   pull(version: number): void {
     this.enqueue(() => this.handlePull(version));
+  }
+
+  /**
+   * Runs `task` while client pushes wait, then sends the client the net
+   * change. A task that rewrites the document in several steps (revert,
+   * then edit) reaches the client as one update instead of a flicker.
+   */
+  hold(task: () => Promise<void>): Promise<void> {
+    this.holds++;
+    return new Promise((resolve) => {
+      this.enqueue(async () => {
+        this.applying = true;
+        try {
+          await task();
+        } finally {
+          this.applying = false;
+          this.holds--;
+          this.reconcile();
+          resolve();
+        }
+      });
+    });
   }
 
   private enqueue(task: () => void | Promise<void>): void {
