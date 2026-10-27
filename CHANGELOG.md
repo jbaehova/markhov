@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2026-10-27)
+
+PDFs look like the editor.
+
+- Every blank line in the document is a line of space in the PDF, as in the editor, instead of collapsing into one paragraph gap.
+- Headings, quotes, rules, lists and code blocks in the PDF use the editor's sizes and spacing.
+- The PDF follows the editor's font size, line height and font settings.
+- Right after Markhov updates, a setting from the right-click menu that VS Code does not know yet asks to reload the window instead of failing with an error.
+
 ## 0.3.0 (2026-10-27)
 
 Settings are a right-click away.

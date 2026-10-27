@@ -61,6 +61,8 @@ The <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> binding only applies while a Ma
 
 Click the PDF icon in the editor title bar, or run **Markhov: Export to PDF** from the Command Palette or the Explorer context menu. The PDF is saved next to the Markdown file with the same name, including any unsaved edits.
 
+The PDF keeps the editor's layout, blank lines included, and follows the font size, line height and font settings.
+
 Export uses a Chromium-based browser in the background (Google Chrome, Chromium, Microsoft Edge or Brave), which gives the same text rendering as a browser and full support for every language, tables and code highlighting. No browser window opens. If your browser is installed in an unusual place, set `markhov.pdf.chromePath`.
 
 ## Settings

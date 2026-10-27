@@ -2,7 +2,7 @@
   "name": "markhov",
   "displayName": "Markhov",
   "description": "A quiet, minimal live preview editor for Markdown. Formatting renders as you type, with clean PDF export.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "jbaehova",
   "author": {
     "name": "Johnny Bae"
