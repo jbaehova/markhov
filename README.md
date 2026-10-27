@@ -35,7 +35,6 @@ You can also right-click a Markdown file in the Explorer and choose **Open with 
 | Italic | <kbd>Cmd</kbd>+<kbd>I</kbd> | <kbd>Ctrl</kbd>+<kbd>I</kbd> |
 | Inline code | <kbd>Cmd</kbd>+<kbd>E</kbd> | <kbd>Ctrl</kbd>+<kbd>E</kbd> |
 | Strikethrough | <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> |
-| Link | <kbd>Cmd</kbd>+<kbd>K</kbd> | <kbd>Ctrl</kbd>+<kbd>K</kbd> |
 | Heading 1 to 6 | <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd> … <kbd>6</kbd> | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd> … <kbd>6</kbd> |
 | Back to paragraph | <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>0</kbd> | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>0</kbd> |
 | Add or check a task | <kbd>Cmd</kbd>+<kbd>Enter</kbd> | <kbd>Ctrl</kbd>+<kbd>Enter</kbd> |
@@ -83,7 +82,6 @@ Right-click anywhere in the editor to change how the page looks or how PDFs are 
 ## Good to know
 
 - A single line break is shown as a line break, and PDF export keeps it that way. Some other renderers, such as GitHub, join such lines into one paragraph.
-- Inside Markhov, <kbd>Cmd</kbd>+<kbd>K</kbd> inserts a link, so VS Code chords that start with <kbd>Cmd</kbd>+<kbd>K</kbd> are not available while the editor has focus.
 - With Remote SSH, WSL or containers, PDF export needs a browser on the remote machine.
 
 ## Development

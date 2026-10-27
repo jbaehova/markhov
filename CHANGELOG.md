@@ -12,6 +12,7 @@ Settings are a right-click away.
 - Enter at the end of a list item starts the next item right below it, also in lists with blank lines between items.
 - Backspace on an empty item with nested items moves them out one level, so they no longer turn into a code block.
 - Shift+Tab in a paragraph that sits inside a list item moves the paragraph out one level, so text indented into a list by accident can be taken back out. Tab there no longer moves the whole item.
+- Cmd+K (Ctrl+K) no longer inserts a link, so VS Code shortcuts that start with Cmd+K work inside Markhov.
 
 ## 0.2.0 (2026-10-27)
 

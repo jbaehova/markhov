@@ -92,26 +92,6 @@ export const toggleTask: Command = (view) =>
     return { from: line.from + indent, insert: '- [ ] ' };
   });
 
-export const insertLink: Command = (view) => {
-  const { state } = view;
-  const transaction = state.changeByRange((range) => {
-    const text = state.sliceDoc(range.from, range.to);
-    if (/^[a-z][a-z0-9+.-]*:\/\/\S+$/i.test(text)) {
-      return {
-        changes: { from: range.from, to: range.to, insert: `[](${text})` },
-        range: EditorSelection.cursor(range.from + 1),
-      };
-    }
-    const insert = `[${text}]()`;
-    return {
-      changes: { from: range.from, to: range.to, insert },
-      range: text ? EditorSelection.cursor(range.from + insert.length - 1) : EditorSelection.cursor(range.from + 1),
-    };
-  });
-  view.dispatch(state.update(transaction, { scrollIntoView: true, userEvent: 'input.format' }));
-  return true;
-};
-
 export const formattingKeymap: KeyBinding[] = [
   { key: 'Tab', run: indentListItem, shift: outdentListItem },
   { key: 'Mod-]', run: indentListItem },
@@ -120,7 +100,6 @@ export const formattingKeymap: KeyBinding[] = [
   { key: 'Mod-i', run: toggleInline('*') },
   { key: 'Mod-e', run: toggleInline('`') },
   { key: 'Mod-Shift-x', run: toggleInline('~~') },
-  { key: 'Mod-k', run: insertLink },
   { key: 'Mod-Enter', run: toggleTask },
   { key: 'Mod-Alt-0', run: setHeading(0) },
   ...[1, 2, 3, 4, 5, 6].map((level) => ({ key: `Mod-Alt-${level}`, run: setHeading(level) })),
