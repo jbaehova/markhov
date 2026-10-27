@@ -155,20 +155,21 @@ body .cm-editor .cm-line.mh-h1 {
   font-size: 1.75em;
   line-height: 1.3;
   padding-top: 0.85em;
-  padding-bottom: 0.15em;
+  padding-bottom: 0.3em;
 }
 
 body .cm-editor .cm-line.mh-h2 {
   font-size: 1.4em;
   line-height: 1.35;
   padding-top: 0.75em;
-  padding-bottom: 0.1em;
+  padding-bottom: 0.25em;
 }
 
 body .cm-editor .cm-line.mh-h3 {
   font-size: 1.2em;
   line-height: 1.4;
   padding-top: 0.6em;
+  padding-bottom: 0.2em;
 }
 
 body .cm-editor .cm-line.mh-h4,
@@ -176,6 +177,7 @@ body .cm-editor .cm-line.mh-h5,
 body .cm-editor .cm-line.mh-h6 {
   font-size: 1.05em;
   padding-top: 0.5em;
+  padding-bottom: 0.15em;
 }
 
 body .cm-editor .cm-line.mh-h6 {
@@ -253,7 +255,6 @@ body .cm-editor .cm-line.mh-quote {
   --mh-quote-pad: 1em;
   padding-left: var(--mh-quote-pad);
   border-left: 3px solid var(--mh-accent);
-  color: var(--mh-muted);
 }
 
 /* Nested quotes get one more bar per level. */
