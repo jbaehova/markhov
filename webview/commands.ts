@@ -1,7 +1,6 @@
-import { syntaxTree } from '@codemirror/language';
-import { type ChangeSpec, EditorSelection, type EditorState } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection } from '@codemirror/state';
 import type { Command, EditorView, KeyBinding } from '@codemirror/view';
-import type { SyntaxNode } from '@lezer/common';
+import { indentListItem, outdentListItem } from './lists';
 
 /** Wraps each selection in `mark`, or unwraps it when it is already wrapped. */
 export function toggleInline(mark: string): Command {
@@ -113,139 +112,10 @@ export const insertLink: Command = (view) => {
   return true;
 };
 
-/** The list item whose marker is on the given line. */
-function itemOnLine(state: EditorState, from: number, to: number): SyntaxNode | null {
-  let found: SyntaxNode | null = null;
-  syntaxTree(state).iterate({
-    from,
-    to,
-    enter(node) {
-      if (found) return false;
-      if (node.name === 'ListMark' && node.from >= from && node.to <= to) {
-        found = node.node.parent;
-        return false;
-      }
-    },
-  });
-  return found;
-}
-
-function quotePrefix(text: string): number {
-  return /^(?:[ \t]*>[ \t]?)*/.exec(text)![0].length;
-}
-
-/** Column (from line start) where a list item's text begins. */
-function contentColumn(state: EditorState, item: SyntaxNode): number {
-  const mark = item.getChild('ListMark')!;
-  const line = state.doc.lineAt(mark.from);
-  const task = item.getChild('Task')?.getChild('TaskMarker');
-  const end = task ? task.to : mark.to;
-  return end - line.from + (/[ \t]/.test(state.sliceDoc(end, end + 1)) ? 1 : 0);
-}
-
-const ORDERED = /^(\d+)([.)])$/;
-
-function orderedNumber(state: EditorState, item: SyntaxNode): number | null {
-  const mark = item.getChild('ListMark');
-  const match = mark ? ORDERED.exec(state.sliceDoc(mark.from, mark.to)) : null;
-  return match ? Number(match[1]) : null;
-}
-
-/**
- * Tab nests a list item under the previous one (indenting it to that item's
- * text column, which is what Markdown needs for `1.` lists); Shift+Tab moves
- * it back out to its parent's level. Child lines move along with the item.
- */
-function shiftListItems(direction: 1 | -1): Command {
-  return (view) => {
-    const { state } = view;
-    const doc = state.doc;
-    const changes: ChangeSpec[] = [];
-    const moved = new Set<number>();
-    let inList = false;
-
-    for (const range of state.selection.ranges) {
-      for (let pos = range.from; pos <= range.to; ) {
-        const line = doc.lineAt(pos);
-        pos = line.to + 1;
-        if (moved.has(line.number)) continue;
-        const item = itemOnLine(state, line.from, line.to);
-        if (!item) continue;
-        inList = true;
-        const mark = item.getChild('ListMark')!;
-        const current = mark.from - line.from;
-
-        let target: number;
-        let number: number | null = null;
-        if (direction > 0) {
-          // Quote marks of continued lines sit between items, so skip over them.
-          let previous = item.prevSibling;
-          while (previous && previous.name !== 'ListItem') previous = previous.prevSibling;
-          if (!previous) continue;
-          target = contentColumn(state, previous);
-          const sublists = [...previous.getChildren('BulletList'), ...previous.getChildren('OrderedList')];
-          const nested = sublists.length ? sublists[sublists.length - 1].getChildren('ListItem') : [];
-          const lastNested = nested[nested.length - 1];
-          number = lastNested ? (orderedNumber(state, lastNested) ?? 0) + 1 : 1;
-        } else {
-          const parent = item.parent?.parent;
-          if (!parent || parent.name !== 'ListItem') continue;
-          const parentMark = parent.getChild('ListMark')!;
-          target = parentMark.from - doc.lineAt(parentMark.from).from;
-          number = (orderedNumber(state, parent) ?? 0) + 1;
-        }
-        const delta = target - current;
-        if (!delta) continue;
-
-        const last = doc.lineAt(item.to).number;
-        for (let n = line.number; n <= last; n++) {
-          const l = doc.line(n);
-          moved.add(n);
-          if (!l.text.trim()) continue;
-          const at = l.from + quotePrefix(l.text);
-          if (delta > 0) {
-            changes.push({ from: at, insert: ' '.repeat(delta) });
-          } else {
-            const spaces = /^ */.exec(doc.sliceString(at, l.to))![0].length;
-            if (spaces) changes.push({ from: at, to: at + Math.min(spaces, -delta) });
-          }
-        }
-        const ordered = ORDERED.exec(state.sliceDoc(mark.from, mark.to));
-        if (ordered && number) changes.push({ from: mark.from, to: mark.to, insert: `${number}${ordered[2]}` });
-      }
-    }
-    if (!inList) return false;
-    if (changes.length) {
-      view.dispatch({ changes, scrollIntoView: true, userEvent: direction > 0 ? 'input.indent' : 'delete.dedent' });
-    }
-    return true;
-  };
-}
-
-export const indentListItem = shiftListItems(1);
-export const outdentListItem = shiftListItems(-1);
-
-const EMPTY_ITEM = /^((?:[ \t]*>[ \t]?)*)[ \t]*(?:[-*+]|\d+[.)])(?:[ \t]+\[[ xX]\])?[ \t]*$/;
-
-/**
- * Enter on an empty list item leaves the list, like Bear, Typora or Notion:
- * a nested item moves up one level, a top-level item loses its marker.
- */
-export const exitEmptyListItem: Command = (view) => {
-  const { state } = view;
-  const { main } = state.selection;
-  if (state.selection.ranges.length !== 1 || !main.empty) return false;
-  const line = state.doc.lineAt(main.head);
-  const match = main.head === line.to ? EMPTY_ITEM.exec(line.text) : null;
-  const item = match ? itemOnLine(state, line.from, line.to) : null;
-  if (!match || !item) return false;
-  if (item.parent?.parent?.name === 'ListItem') return outdentListItem(view);
-  view.dispatch({ changes: { from: line.from + match[1].length, to: line.to }, userEvent: 'delete' });
-  return true;
-};
-
 export const formattingKeymap: KeyBinding[] = [
   { key: 'Tab', run: indentListItem, shift: outdentListItem },
+  { key: 'Mod-]', run: indentListItem },
+  { key: 'Mod-[', run: outdentListItem },
   { key: 'Mod-b', run: toggleInline('**') },
   { key: 'Mod-i', run: toggleInline('*') },
   { key: 'Mod-e', run: toggleInline('`') },

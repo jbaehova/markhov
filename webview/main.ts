@@ -7,11 +7,19 @@ import { search, searchKeymap } from '@codemirror/search';
 import { EditorSelection, EditorState, type Extension, Prec } from '@codemirror/state';
 import { drawSelection, dropCursor, EditorView, keymap } from '@codemirror/view';
 import type { MarkhovConfig, Resources } from '../src/protocol';
-import { exitEmptyListItem, formattingKeymap } from './commands';
+import { formattingKeymap } from './commands';
 import { Frontmatter } from './frontmatter';
 import { codeHighlight } from './highlight';
 import { onHostMessage, post } from './host';
 import { linkHandling, trackModifier } from './links';
+import {
+  breakListItem,
+  continueListItem,
+  deleteEmptyListItem,
+  EmptyListItems,
+  exitEmptyListItem,
+  listMarkerInput,
+} from './lists';
 import { livePreview } from './livePreview';
 import { focusTracking, refresh, resourcesFacet } from './state';
 import { SyncClient } from './sync';
@@ -40,15 +48,24 @@ function extensions(version: number): Extension[] {
     EditorState.allowMultipleSelections.of(true),
     EditorView.lineWrapping,
     EditorView.contentAttributes.of({ spellcheck: 'false', autocorrect: 'off', autocapitalize: 'off' }),
-    markdown({ base: markdownLanguage, codeLanguages: languages, extensions: [Frontmatter] }),
+    markdown({ base: markdownLanguage, codeLanguages: languages, extensions: [Frontmatter, EmptyListItems] }),
     syntaxHighlighting(codeHighlight),
     livePreview,
     tableField,
     linkHandling,
     compositionRefresh,
+    listMarkerInput,
     search({ top: true }),
-    // Ahead of the markdown keymap's Enter, which only loosens the list.
-    Prec.highest(keymap.of([{ key: 'Enter', run: exitEmptyListItem }])),
+    // Ahead of the markdown keymap, whose Enter only loosens the list and
+    // whose Backspace leaves a stray item's indentation behind.
+    Prec.highest(
+      keymap.of([
+        { key: 'Enter', run: exitEmptyListItem },
+        { key: 'Enter', run: continueListItem },
+        { key: 'Shift-Enter', run: breakListItem },
+        { key: 'Backspace', run: deleteEmptyListItem },
+      ]),
+    ),
     keymap.of([...formattingKeymap, ...defaultKeymap, ...historyKeymap, ...searchKeymap, indentWithTab]),
   ];
 }

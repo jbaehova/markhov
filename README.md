@@ -40,10 +40,20 @@ You can also right-click a Markdown file in the Explorer and choose **Open with 
 | Back to paragraph | <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>0</kbd> | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>0</kbd> |
 | Add or check a task | <kbd>Cmd</kbd>+<kbd>Enter</kbd> | <kbd>Ctrl</kbd>+<kbd>Enter</kbd> |
 | Nest or unnest a list item | <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> | <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> |
+| Nest or unnest a list item (alternative) | <kbd>Cmd</kbd>+<kbd>]</kbd> / <kbd>Cmd</kbd>+<kbd>[</kbd> | <kbd>Ctrl</kbd>+<kbd>]</kbd> / <kbd>Ctrl</kbd>+<kbd>[</kbd> |
+| New line inside a list item | <kbd>Shift</kbd>+<kbd>Enter</kbd> | <kbd>Shift</kbd>+<kbd>Enter</kbd> |
 | Find and replace | <kbd>Cmd</kbd>+<kbd>F</kbd> | <kbd>Ctrl</kbd>+<kbd>F</kbd> |
 | Open a link | <kbd>Cmd</kbd>+click | <kbd>Ctrl</kbd>+click |
 
-Lists behave the way you expect: <kbd>Enter</kbd> continues a list (numbers count up, tasks start unchecked), <kbd>Enter</kbd> on an empty item leaves the list, and <kbd>Backspace</kbd> at the start of an item removes its bullet. Click a checkbox to toggle it, or click a table cell to edit its source.
+Lists behave the way you expect from Notion, Bear or Typora:
+
+- <kbd>Enter</kbd> continues a list. Numbers count up and tasks start unchecked. <kbd>Shift</kbd>+<kbd>Enter</kbd> adds a line to the same item instead.
+- <kbd>Enter</kbd> on an empty item moves it up one level, back into the parent list, or leaves the list when it is already at the top.
+- <kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd> work from anywhere in the item and on several selected items at once. Children move along, the indentation always matches what Markdown needs under `1.` or `-`, and numbered lists renumber themselves.
+- <kbd>Backspace</kbd> on an empty item removes it. At the start of an item with text it removes the bullet.
+- Typing `- ` or `1. ` on an empty item switches it between bullets and numbers, and `[] ` makes it a task. Undo once to keep what you typed.
+
+Click a checkbox to toggle it, or click a table cell to edit its source.
 
 The <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> binding only applies while a Markdown editor has focus; everywhere else it still toggles the Problems panel. You can change it in Keyboard Shortcuts by searching for `markhov.toggle`.
 
