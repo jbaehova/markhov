@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { Authority } from './authority';
+import { type Width, WIDTHS } from './menu';
 import type { HostMessage, MarkhovConfig, Resources, WebviewMessage } from './protocol';
 
 export const VIEW_TYPE = 'markhov.editor';
@@ -19,7 +20,7 @@ export function readConfig(): MarkhovConfig {
   return {
     fontSize: config.get('fontSize', 16),
     lineHeight: config.get('lineHeight', 1.65),
-    maxWidth: config.get('maxWidth', 720),
+    maxWidth: WIDTHS[config.get<Width>('width', 'medium')] ?? WIDTHS.medium,
     fontFamily: config.get('fontFamily', ''),
     colors: config.get('colors', 'bear'),
     appearance: config.get('appearance', 'auto'),

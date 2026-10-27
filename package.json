@@ -92,6 +92,301 @@
         "title": "Export to PDF",
         "category": "Markhov",
         "icon": "$(file-pdf)"
+      },
+      {
+        "command": "markhov.openSettings",
+        "title": "More Settings...",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.veryWide",
+        "title": "Very Wide",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.veryWide.checked",
+        "title": "Very Wide ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.quiteWide",
+        "title": "Quite Wide",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.quiteWide.checked",
+        "title": "Quite Wide ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.medium",
+        "title": "Medium",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.medium.checked",
+        "title": "Medium ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.quiteNarrow",
+        "title": "Quite Narrow",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.quiteNarrow.checked",
+        "title": "Quite Narrow ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.veryNarrow",
+        "title": "Very Narrow",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.width.veryNarrow.checked",
+        "title": "Very Narrow ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.14",
+        "title": "14 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.14.checked",
+        "title": "14 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.15",
+        "title": "15 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.15.checked",
+        "title": "15 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.16",
+        "title": "16 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.16.checked",
+        "title": "16 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.17",
+        "title": "17 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.17.checked",
+        "title": "17 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.18",
+        "title": "18 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.18.checked",
+        "title": "18 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.20",
+        "title": "20 px",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.fontSize.20.checked",
+        "title": "20 px ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.4",
+        "title": "1.4",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.4.checked",
+        "title": "1.4 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.5",
+        "title": "1.5",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.5.checked",
+        "title": "1.5 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.65",
+        "title": "1.65",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.65.checked",
+        "title": "1.65 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.8",
+        "title": "1.8",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.1.8.checked",
+        "title": "1.8 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.2",
+        "title": "2.0",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.lineHeight.2.checked",
+        "title": "2.0 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.auto",
+        "title": "Auto",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.auto.checked",
+        "title": "Auto ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.light",
+        "title": "Light",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.light.checked",
+        "title": "Light ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.dark",
+        "title": "Dark",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.appearance.dark.checked",
+        "title": "Dark ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.colors.bear",
+        "title": "Markhov",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.colors.bear.checked",
+        "title": "Markhov ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.colors.vscode",
+        "title": "VS Code Theme",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.colors.vscode.checked",
+        "title": "VS Code Theme ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.pageSize.A4",
+        "title": "A4",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.pageSize.A4.checked",
+        "title": "A4 ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.pageSize.Letter",
+        "title": "Letter",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.pageSize.Letter.checked",
+        "title": "Letter ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.none",
+        "title": "Don't Open",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.none.checked",
+        "title": "Don't Open ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.browser",
+        "title": "Open in Browser",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.browser.checked",
+        "title": "Open in Browser ✓",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.default",
+        "title": "Open in Default App",
+        "category": "Markhov"
+      },
+      {
+        "command": "markhov.set.pdf.open.default.checked",
+        "title": "Open in Default App ✓",
+        "category": "Markhov"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "markhov.menu.width",
+        "label": "Width"
+      },
+      {
+        "id": "markhov.menu.fontSize",
+        "label": "Font Size"
+      },
+      {
+        "id": "markhov.menu.lineHeight",
+        "label": "Line Spacing"
+      },
+      {
+        "id": "markhov.menu.appearance",
+        "label": "Appearance"
+      },
+      {
+        "id": "markhov.menu.colors",
+        "label": "Colors"
+      },
+      {
+        "id": "markhov.menu.pdf.pageSize",
+        "label": "PDF Page Size"
+      },
+      {
+        "id": "markhov.menu.pdf.open",
+        "label": "After PDF Export"
       }
     ],
     "keybindings": [
@@ -143,6 +438,327 @@
           "group": "navigation"
         }
       ],
+      "webview/context": [
+        {
+          "submenu": "markhov.menu.width",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "6_markhov@1"
+        },
+        {
+          "submenu": "markhov.menu.fontSize",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "6_markhov@2"
+        },
+        {
+          "submenu": "markhov.menu.lineHeight",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "6_markhov@3"
+        },
+        {
+          "submenu": "markhov.menu.appearance",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "6_markhov@4"
+        },
+        {
+          "submenu": "markhov.menu.colors",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "6_markhov@5"
+        },
+        {
+          "command": "markhov.exportPdf",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "7_markhov_pdf@1"
+        },
+        {
+          "submenu": "markhov.menu.pdf.pageSize",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "7_markhov_pdf@2"
+        },
+        {
+          "submenu": "markhov.menu.pdf.open",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "7_markhov_pdf@3"
+        },
+        {
+          "command": "markhov.openSettings",
+          "when": "webviewId == 'markhov.editor'",
+          "group": "8_markhov_settings@1"
+        }
+      ],
+      "markhov.menu.width": [
+        {
+          "command": "markhov.set.width.veryWide",
+          "when": "config.markhov.width != 'veryWide'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.width.veryWide.checked",
+          "when": "config.markhov.width == 'veryWide'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.width.quiteWide",
+          "when": "config.markhov.width != 'quiteWide'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.width.quiteWide.checked",
+          "when": "config.markhov.width == 'quiteWide'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.width.medium",
+          "when": "config.markhov.width != 'medium'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.width.medium.checked",
+          "when": "config.markhov.width == 'medium'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.width.quiteNarrow",
+          "when": "config.markhov.width != 'quiteNarrow'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.width.quiteNarrow.checked",
+          "when": "config.markhov.width == 'quiteNarrow'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.width.veryNarrow",
+          "when": "config.markhov.width != 'veryNarrow'",
+          "group": "options@5"
+        },
+        {
+          "command": "markhov.set.width.veryNarrow.checked",
+          "when": "config.markhov.width == 'veryNarrow'",
+          "group": "options@5"
+        }
+      ],
+      "markhov.menu.fontSize": [
+        {
+          "command": "markhov.set.fontSize.14",
+          "when": "config.markhov.fontSize != '14'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.fontSize.14.checked",
+          "when": "config.markhov.fontSize == '14'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.fontSize.15",
+          "when": "config.markhov.fontSize != '15'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.fontSize.15.checked",
+          "when": "config.markhov.fontSize == '15'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.fontSize.16",
+          "when": "config.markhov.fontSize != '16'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.fontSize.16.checked",
+          "when": "config.markhov.fontSize == '16'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.fontSize.17",
+          "when": "config.markhov.fontSize != '17'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.fontSize.17.checked",
+          "when": "config.markhov.fontSize == '17'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.fontSize.18",
+          "when": "config.markhov.fontSize != '18'",
+          "group": "options@5"
+        },
+        {
+          "command": "markhov.set.fontSize.18.checked",
+          "when": "config.markhov.fontSize == '18'",
+          "group": "options@5"
+        },
+        {
+          "command": "markhov.set.fontSize.20",
+          "when": "config.markhov.fontSize != '20'",
+          "group": "options@6"
+        },
+        {
+          "command": "markhov.set.fontSize.20.checked",
+          "when": "config.markhov.fontSize == '20'",
+          "group": "options@6"
+        }
+      ],
+      "markhov.menu.lineHeight": [
+        {
+          "command": "markhov.set.lineHeight.1.4",
+          "when": "config.markhov.lineHeight != '1.4'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.4.checked",
+          "when": "config.markhov.lineHeight == '1.4'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.5",
+          "when": "config.markhov.lineHeight != '1.5'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.5.checked",
+          "when": "config.markhov.lineHeight == '1.5'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.65",
+          "when": "config.markhov.lineHeight != '1.65'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.65.checked",
+          "when": "config.markhov.lineHeight == '1.65'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.8",
+          "when": "config.markhov.lineHeight != '1.8'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.8.checked",
+          "when": "config.markhov.lineHeight == '1.8'",
+          "group": "options@4"
+        },
+        {
+          "command": "markhov.set.lineHeight.2",
+          "when": "config.markhov.lineHeight != '2'",
+          "group": "options@5"
+        },
+        {
+          "command": "markhov.set.lineHeight.2.checked",
+          "when": "config.markhov.lineHeight == '2'",
+          "group": "options@5"
+        }
+      ],
+      "markhov.menu.appearance": [
+        {
+          "command": "markhov.set.appearance.auto",
+          "when": "config.markhov.appearance != 'auto'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.appearance.auto.checked",
+          "when": "config.markhov.appearance == 'auto'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.appearance.light",
+          "when": "config.markhov.appearance != 'light'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.appearance.light.checked",
+          "when": "config.markhov.appearance == 'light'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.appearance.dark",
+          "when": "config.markhov.appearance != 'dark'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.appearance.dark.checked",
+          "when": "config.markhov.appearance == 'dark'",
+          "group": "options@3"
+        }
+      ],
+      "markhov.menu.colors": [
+        {
+          "command": "markhov.set.colors.bear",
+          "when": "config.markhov.colors != 'bear'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.colors.bear.checked",
+          "when": "config.markhov.colors == 'bear'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.colors.vscode",
+          "when": "config.markhov.colors != 'vscode'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.colors.vscode.checked",
+          "when": "config.markhov.colors == 'vscode'",
+          "group": "options@2"
+        }
+      ],
+      "markhov.menu.pdf.pageSize": [
+        {
+          "command": "markhov.set.pdf.pageSize.A4",
+          "when": "config.markhov.pdf.pageSize != 'A4'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.A4.checked",
+          "when": "config.markhov.pdf.pageSize == 'A4'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.Letter",
+          "when": "config.markhov.pdf.pageSize != 'Letter'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.Letter.checked",
+          "when": "config.markhov.pdf.pageSize == 'Letter'",
+          "group": "options@2"
+        }
+      ],
+      "markhov.menu.pdf.open": [
+        {
+          "command": "markhov.set.pdf.open.none",
+          "when": "config.markhov.pdf.open != 'none'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.pdf.open.none.checked",
+          "when": "config.markhov.pdf.open == 'none'",
+          "group": "options@1"
+        },
+        {
+          "command": "markhov.set.pdf.open.browser",
+          "when": "config.markhov.pdf.open != 'browser'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.pdf.open.browser.checked",
+          "when": "config.markhov.pdf.open == 'browser'",
+          "group": "options@2"
+        },
+        {
+          "command": "markhov.set.pdf.open.default",
+          "when": "config.markhov.pdf.open != 'default'",
+          "group": "options@3"
+        },
+        {
+          "command": "markhov.set.pdf.open.default.checked",
+          "when": "config.markhov.pdf.open == 'default'",
+          "group": "options@3"
+        }
+      ],
       "commandPalette": [
         {
           "command": "markhov.openEditor",
@@ -159,6 +775,218 @@
         {
           "command": "markhov.exportPdf",
           "when": "resourceLangId == markdown || activeCustomEditorId == 'markhov.editor'"
+        },
+        {
+          "command": "markhov.openSettings",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.veryWide",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.veryWide.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.quiteWide",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.quiteWide.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.medium",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.medium.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.quiteNarrow",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.quiteNarrow.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.veryNarrow",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.width.veryNarrow.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.14",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.14.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.15",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.15.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.16",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.16.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.17",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.17.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.18",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.18.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.20",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.fontSize.20.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.4",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.4.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.5",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.5.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.65",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.65.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.8",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.1.8.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.2",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.lineHeight.2.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.auto",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.auto.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.light",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.light.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.dark",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.appearance.dark.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.colors.bear",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.colors.bear.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.colors.vscode",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.colors.vscode.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.A4",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.A4.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.Letter",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.pageSize.Letter.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.none",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.none.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.browser",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.browser.checked",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.default",
+          "when": "false"
+        },
+        {
+          "command": "markhov.set.pdf.open.default.checked",
+          "when": "false"
         }
       ]
     },
@@ -179,11 +1007,31 @@
           "maximum": 3,
           "description": "Line height of body text."
         },
-        "markhov.maxWidth": {
-          "type": "number",
-          "default": 720,
-          "minimum": 320,
-          "description": "Maximum width of the text column in pixels."
+        "markhov.width": {
+          "type": "string",
+          "enum": [
+            "veryWide",
+            "quiteWide",
+            "medium",
+            "quiteNarrow",
+            "veryNarrow"
+          ],
+          "enumItemLabels": [
+            "Very Wide",
+            "Quite Wide",
+            "Medium",
+            "Quite Narrow",
+            "Very Narrow"
+          ],
+          "enumDescriptions": [
+            "1080 pixels.",
+            "880 pixels.",
+            "720 pixels.",
+            "640 pixels.",
+            "560 pixels."
+          ],
+          "default": "medium",
+          "description": "Width of the text column."
         },
         "markhov.fontFamily": {
           "type": "string",

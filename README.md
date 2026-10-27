@@ -65,13 +65,15 @@ Export uses a Chromium-based browser in the background (Google Chrome, Chromium,
 
 ## Settings
 
+Right-click anywhere in the editor to change how the page looks or how PDFs are exported. Each setting opens a submenu with a check mark next to the current value, and **More Settings...** opens the full list below.
+
 | Setting | Default | Description |
 | --- | --- | --- |
 | `markhov.appearance` | `auto` | `light`, `dark`, or `auto` to follow the VS Code theme. |
 | `markhov.colors` | `bear` | `bear` for the Markhov palette, `vscode` to use the colors of your VS Code theme. |
 | `markhov.fontSize` | `16` | Base font size in pixels. |
 | `markhov.lineHeight` | `1.65` | Line height of body text. |
-| `markhov.maxWidth` | `720` | Maximum width of the text column in pixels. |
+| `markhov.width` | `medium` | Width of the text column, in five steps from `veryNarrow` (560 pixels) to `veryWide` (1080 pixels). |
 | `markhov.fontFamily` | system font | Font family for body text. |
 | `markhov.pdf.pageSize` | `A4` | `A4` or `Letter`. |
 | `markhov.pdf.open` | `none` | Open the PDF after exporting: `none`, `default` (system PDF app) or `browser`. |
