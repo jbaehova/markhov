@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (2026-10-27)
+
+Settings are a right-click away.
+
+- Right-click in the editor to change how the page looks or how PDFs are exported. Each setting opens a submenu with a check mark next to the current value. Export to PDF is in the same menu.
+- The text column width comes in five steps from Very Narrow to Very Wide. Medium is the old default width. `markhov.width` replaces `markhov.maxWidth`.
+- Block quotes use the body text color instead of gray, in the editor and in PDFs.
+- Headings have a little more room below them.
+- Typing `- ` or `1. ` right under a paragraph shows the bullet at once, instead of turning the paragraph into a heading until the first letter.
+- Enter at the end of a list item starts the next item right below it, also in lists with blank lines between items.
+- Backspace on an empty item with nested items moves them out one level, so they no longer turn into a code block.
+
 ## 0.2.0 (2026-10-27)
 
 List editing works the way it does in Notion, Bear or Typora.
