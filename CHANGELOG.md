@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 (2026-10-27)
+
+Markhov and the file stay in step, also while an agent edits it.
+
+- After VS Code restarts its extensions, for example when Markhov or another extension updates, open Markhov tabs reconnect on their own. Before, they kept showing the old text until the tab was closed and opened again: edits made outside the editor, such as an agent's, never showed up, and typing in the tab was not saved.
+- A tab with unsaved changes at that moment reconnects as soon as they are saved. Until then, editing in it pauses with a notice, so nothing is typed that would be lost.
+- When the file changes on disk while the document has unsaved edits, as when an agent writes in the second before auto save, the change is merged in and the unsaved edits are kept. Before, VS Code ignored the change and the next save failed because the file was newer. If Markhov does not have focus at that moment, VS Code still asks on save, and Overwrite keeps both sides.
+- An outside edit in several places updates just those places, so the cursor and the rest of the page stay where they are.
+- Saving right after typing waits for the last keystrokes to reach the file.
+
 ## 0.4.0 (2026-10-27)
 
 PDFs look like the editor.

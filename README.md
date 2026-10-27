@@ -8,7 +8,7 @@ A quiet, minimal live preview editor for Markdown in VS Code. Formatting renders
 
 - **Write in the preview.** Headings, emphasis, lists, tasks, quotes, tables, images and code blocks render in place. Move the cursor into any of them and the Markdown appears, so you can edit it directly. Heading marks hang in the margin, so text never jumps around.
 - **Opens only when you ask.** Markdown files keep opening in the normal text editor. Press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> to switch the current tab to Markhov in place, and press it again to go back. Unsaved changes come along.
-- **Your file stays your file.** Markhov edits the text itself and never rewrites it, so there are no surprise reformats and git diffs stay clean. Undo, save, hot exit and outside changes (git, formatters, other editors) all just work.
+- **Your file stays your file.** Markhov edits the text itself and never rewrites it, so there are no surprise reformats and git diffs stay clean. Undo, save, hot exit and outside changes (agents, git, formatters, other editors) all just work.
 - **Standard Markdown.** CommonMark plus GitHub Flavored Markdown: task lists, tables, strikethrough, autolinks and YAML front matter. No custom syntax.
 - **Clean PDF export.** One click saves a PDF next to your file, with the same typography, page numbers and no browser headers.
 
