@@ -1,18 +1,95 @@
-# Markhov
+<p align="center">
+  <img src="images/banner.png" alt="Markhov: Markdown that renders as you type, right inside VS Code" width="100%">
+</p>
 
-A quiet, minimal live preview editor for Markdown in VS Code. Formatting renders right where you type, and the markup only shows up around the cursor.
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=jbaehova.markhov"><img src="https://vsmarketplacebadges.dev/version-short/jbaehova.markhov.svg?style=flat-square&color=2f6be0&label=Marketplace" alt="Marketplace version"></a>
+  <a href="https://code.visualstudio.com/"><img src="https://img.shields.io/badge/VS%20Code-1.90%2B-2f6be0?style=flat-square" alt="VS Code 1.90 or later"></a>
+  <a href="https://github.com/jbaehova/markhov/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jbaehova/markhov/ci.yml?branch=main&style=flat-square&label=tests" alt="Tests"></a>
+  <a href="https://github.com/jbaehova/markhov/releases/latest"><img src="https://img.shields.io/github/v/release/jbaehova/markhov?style=flat-square&color=141414" alt="Latest release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/jbaehova/markhov?style=flat-square&color=141414" alt="MIT license"></a>
+</p>
 
-![Markhov editing a Markdown note](images/editor-light.png)
+<p align="center">
+  <b>A quiet, minimal live preview editor for Markdown in VS Code.</b><br>
+  Formatting renders right where you type, and the markup only shows up around the cursor.
+</p>
 
-## Why Markhov
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=jbaehova.markhov"><b>Install</b></a>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#features">Features</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#keyboard-shortcuts">Shortcuts</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#pdf-export">PDF export</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#settings">Settings</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
+</p>
 
-- **Write in the preview.** Headings, emphasis, lists, tasks, quotes, tables, images and code blocks render in place. Move the cursor into any of them and the Markdown appears, so you can edit it directly. Heading marks hang in the margin, so text never jumps around.
-- **Opens only when you ask.** Markdown files keep opening in the normal text editor. Press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> to switch the current tab to Markhov in place, and press it again to go back. Unsaved changes come along.
-- **Your file stays your file.** Markhov edits the text itself and never rewrites it, so there are no surprise reformats and git diffs stay clean. Undo, save, hot exit and outside changes (agents, git, formatters, other editors) all just work.
-- **Standard Markdown.** CommonMark plus GitHub Flavored Markdown: task lists, tables, strikethrough, autolinks and YAML front matter. No custom syntax.
-- **Clean PDF export.** One click saves a PDF next to your file, with the same typography, page numbers and no browser headers.
+<br>
 
-![Markhov in dark mode](images/editor-dark.png)
+<p align="center">
+  <img src="images/demo.gif" alt="Typing in Markhov: headings, bold, italics, a task list and a quote render as they are typed" width="820">
+</p>
+
+## Features
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>✍️ Write in the preview</h3>
+      <p>Headings, emphasis, lists, tasks, quotes, tables, images and code blocks render in place. Move the cursor into any of them and the Markdown appears, so you can edit it directly. Heading marks hang in the margin, so text never jumps around.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>⚡ Opens only when you ask</h3>
+      <p>Markdown files keep opening in the normal text editor. Press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> to switch the current tab to Markhov in place, and press it again to go back. Unsaved changes come along.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🔒 Your file stays your file</h3>
+      <p>Markhov edits the text itself and never rewrites it, so there are no surprise reformats and git diffs stay clean. Undo, save, hot exit and outside changes from agents, git, formatters or other editors all just work.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>📐 Standard Markdown</h3>
+      <p>CommonMark plus GitHub Flavored Markdown: task lists, tables, strikethrough, autolinks and YAML front matter. No custom syntax, nothing to lock you in.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📝 Lists like Notion, Bear or Typora</h3>
+      <p>Enter continues a list, Tab and Shift+Tab nest from anywhere in an item, and numbered lists renumber themselves. <a href="#lists">More below.</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>📄 Clean PDF export</h3>
+      <p>One click saves a PDF next to your file, with the editor's typography and spacing, page numbers and no browser headers.</p>
+    </td>
+  </tr>
+</table>
+
+### Light and dark
+
+<table>
+  <tr>
+    <td><img src="images/editor-light.png" alt="Markhov in light mode"></td>
+    <td><img src="images/editor-dark.png" alt="Markhov in dark mode"></td>
+  </tr>
+</table>
+
+Markhov follows your VS Code theme by default. You can also pin it to light or dark, and switch between the Markhov palette and the colors of your VS Code theme.
+
+## Install
+
+Install **Markhov** from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jbaehova.markhov), or from the command line:
+
+```sh
+code --install-extension jbaehova.markhov
+```
+
+For editors that do not use the Visual Studio Marketplace, download the `.vsix` file from the [latest release](https://github.com/jbaehova/markhov/releases/latest) and run **Extensions: Install from VSIX...** from the Command Palette.
 
 ## Getting started
 
@@ -26,7 +103,7 @@ You can also right-click a Markdown file in the Explorer and choose **Open with 
 "workbench.editorAssociations": { "*.md": "markhov.editor" }
 ```
 
-## Editing
+## Keyboard shortcuts
 
 | Action | macOS | Windows and Linux |
 | --- | --- | --- |
@@ -44,6 +121,12 @@ You can also right-click a Markdown file in the Explorer and choose **Open with 
 | Find and replace | <kbd>Cmd</kbd>+<kbd>F</kbd> | <kbd>Ctrl</kbd>+<kbd>F</kbd> |
 | Open a link | <kbd>Cmd</kbd>+click | <kbd>Ctrl</kbd>+click |
 
+Click a checkbox to toggle it, or click a table cell to edit its source.
+
+The <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> binding only applies while a Markdown editor has focus; everywhere else it still toggles the Problems panel. You can change it in Keyboard Shortcuts by searching for `markhov.toggle`.
+
+### Lists
+
 Lists behave the way you expect from Notion, Bear or Typora:
 
 - <kbd>Enter</kbd> continues a list. Numbers count up and tasks start unchecked. <kbd>Shift</kbd>+<kbd>Enter</kbd> adds a line to the same item instead.
@@ -52,10 +135,6 @@ Lists behave the way you expect from Notion, Bear or Typora:
 - <kbd>Backspace</kbd> on an empty item removes it, and items nested under it move out one level. At the start of an item with text it removes the bullet.
 - In a paragraph that belongs to an item (indented under it after a blank line), <kbd>Shift</kbd>+<kbd>Tab</kbd> moves the paragraph out one level.
 - Typing `- ` or `1. ` on an empty item switches it between bullets and numbers, and `[] ` makes it a task. Undo once to keep what you typed.
-
-Click a checkbox to toggle it, or click a table cell to edit its source.
-
-The <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> binding only applies while a Markdown editor has focus; everywhere else it still toggles the Problems panel. You can change it in Keyboard Shortcuts by searching for `markhov.toggle`.
 
 ## PDF export
 
@@ -97,6 +176,8 @@ npm run test:integration
 
 Press <kbd>F5</kbd> in VS Code to launch an Extension Development Host. To work on the editor in a browser, serve the project root and open `harness/index.html`.
 
+Bug reports and ideas are welcome in [Issues](https://github.com/jbaehova/markhov/issues).
+
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © Johnny Bae

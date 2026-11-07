@@ -1,0 +1,25 @@
+name: Bug report
+description: Something in Markhov does not work as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what Markhov did instead. A short Markdown snippet that shows the problem helps a lot.
+    validations:
+      required: true
+  - type: input
+    id: markhov
+    attributes:
+      label: Markhov version
+      placeholder: "0.5.0"
+    validations:
+      required: true
+  - type: input
+    id: vscode
+    attributes:
+      label: VS Code version and OS
+      placeholder: "VS Code 1.106, macOS 26"
+    validations:
+      required: true
