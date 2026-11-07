@@ -1,0 +1,11 @@
+name: Feature request
+description: An idea that would make writing in Markhov nicer.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What you would like Markhov to do, and the situation where you missed it.
+    validations:
+      required: true

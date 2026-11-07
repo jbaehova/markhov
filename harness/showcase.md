@@ -1,32 +1,34 @@
-# Weekend trip
+# Red panda survey, Ilam
 
-A quiet place to write. **Formatting** shows up as you type, and the *markup* steps aside until you need it.
+Field notes from three days on the ridge trails of **eastern Nepal**. Fresh signs were densest where bamboo cover passed *60 percent*, in line with what is known about the species' [habitat](https://en.wikipedia.org/wiki/Red_panda).
 
-## Packing list
+## Before the next visit
 
-- [x] Passport and tickets
-- [x] Camera with a spare battery
-- [ ] Rain jacket
-- [ ] Notebook
+- [x] Recharge the camera traps
+- [x] Log GPS points for every dropping
+- [ ] Send the samples to the lab
+- [ ] Share transect maps with the rangers
 
-## Plan
+## Method
 
-1. Leave early on **Saturday**
-2. Coffee by the harbor
-   - try the [bakery](https://example.com) on the corner
-   - walk the old town
-3. Back home on Sunday evening
+1. Walk each **2 km transect** at dawn
+2. Record every sign within 10 m of the trail
+   - droppings, feeding marks and sightings
+   - bamboo cover in a 5 m circle
+3. Check the camera traps on the way back
 
-> Not all those who wander are lost.
+> Most sightings came in the first hour after sunrise, while the animals were still feeding in the canopy.
 
-![Sunset over the hills](photo.svg)
+![Red panda on a mossy branch](red-panda.jpg)
 
-| Day | Where | Budget |
-|:--|:--|--:|
-| Saturday | Harbor | 120 |
-| Sunday | Old town | 80 |
+| Transect | Elevation | Signs | Bamboo cover |
+|:--|--:|--:|--:|
+| Ridge A | 2,450 m | 14 | 72% |
+| Ridge B | 2,610 m | 9 | 58% |
+| Valley C | 2,180 m | 3 | 31% |
 
-```ts
-const days = ['Saturday', 'Sunday'];
-console.log(`Trip: ${days.join(' to ')}`);
+```python
+signs = {"Ridge A": 14, "Ridge B": 9, "Valley C": 3}
+for site, count in signs.items():
+    print(f"{site}: {count / 2:.1f} signs per km")
 ```
