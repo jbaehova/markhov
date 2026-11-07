@@ -29,12 +29,6 @@
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
-<br>
-
-<p align="center">
-  <img src="images/demo.gif" alt="Typing in Markhov: headings, bold, italics, a task list and a quote render as they are typed" width="820">
-</p>
-
 ## Features
 
 <table>
